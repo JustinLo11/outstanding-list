@@ -3,235 +3,2378 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Outstanding List</title>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
-:root{--bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#687386;--line:#e5e9f0;--primary:#2563eb;--green:#15803d;--yellow:#b45309;--red:#b91c1c}
-*{box-sizing:border-box} body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
-header{background:#172033;color:#fff;padding:18px 24px;position:sticky;top:0;z-index:10}
-.brand{font-size:22px;font-weight:700;margin-bottom:14px}
-nav{display:flex;gap:8px;flex-wrap:wrap}
-nav button{border:0;background:#2b3850;color:#fff;padding:9px 14px;border-radius:8px;cursor:pointer;font-weight:600}
-nav button.active,nav button:hover{background:var(--primary)}
-main{max-width:1250px;margin:24px auto;padding:0 18px}
-.toolbar{display:flex;gap:10px;flex-wrap:wrap;justify-content:space-between;align-items:center;margin-bottom:18px}
-.toolbar-left{display:flex;gap:10px;flex-wrap:wrap}
-input,select,textarea{font:inherit;border:1px solid #d5dbe5;border-radius:8px;padding:9px 11px;background:#fff}
-input[type=search]{min-width:260px}.btn{border:0;border-radius:8px;padding:10px 14px;cursor:pointer;font-weight:700}
-.primary{background:var(--primary);color:#fff}.secondary{background:#e9edf4;color:#172033}
-.section{background:var(--card);border:1px solid var(--line);border-radius:12px;margin-bottom:22px;overflow:hidden}
-.section-title{padding:15px 18px;font-size:17px;font-weight:700;border-bottom:1px solid var(--line)}
-.section-title.running{color:var(--yellow)} .section-title.done{color:var(--green)}
-table{width:100%;border-collapse:collapse} th,td{padding:12px 14px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top} th{font-size:12px;text-transform:uppercase;color:var(--muted);background:#fafbfc}
-tr:last-child td{border-bottom:0}.task-name{font-weight:600;white-space:pre-wrap}.muted{color:var(--muted);font-size:13px}
-.badge{display:inline-block;border-radius:999px;padding:5px 9px;font-size:12px;font-weight:700}
-.belum{background:#f1f3f6;color:#475569}.proses{background:#fff3cd;color:var(--yellow)}.selesai{background:#dcfce7;color:var(--green)}
-.actions{display:flex;gap:6px;flex-wrap:wrap}.actions button{border:0;background:#eef2f7;padding:7px 9px;border-radius:7px;cursor:pointer}
-.empty{padding:24px;text-align:center;color:var(--muted)}
-dialog{border:0;border-radius:14px;padding:0;width:min(620px,92vw);box-shadow:0 20px 70px #0003}dialog::backdrop{background:#0007}
-.modal{padding:22px}.modal h2{margin:0 0 18px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.full{grid-column:1/-1}.field label{display:block;font-size:13px;font-weight:700;margin-bottom:6px}.field input,.field select,.field textarea{width:100%}.field textarea{min-height:100px;resize:vertical}.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}
-.statusbar{margin-bottom:15px;color:var(--muted);font-size:13px}.error{color:var(--red);font-weight:700}
-@media(max-width:700px){.form-grid{grid-template-columns:1fr}.full{grid-column:auto}th:nth-child(4),td:nth-child(4){display:none}input[type=search]{min-width:0;width:100%}}
+:root{
+  --bg:#f5f7fb;
+  --card:#fff;
+  --text:#172033;
+  --muted:#687386;
+  --line:#e5e9f0;
+  --primary:#2563eb;
+  --green:#15803d;
+  --yellow:#b45309;
+  --red:#b91c1c;
+}
+
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+
+/* HEADER */
+header{
+  background:#172033;
+  color:#fff;
+  padding:18px 24px;
+  position:sticky;
+  top:0;
+  z-index:10;
+}
+
+.brand{
+  font-size:22px;
+  font-weight:700;
+  margin-bottom:14px;
+}
+
+nav{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+nav button{
+  border:0;
+  background:#2b3850;
+  color:#fff;
+  padding:9px 14px;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:600;
+}
+
+nav button.active,
+nav button:hover{
+  background:var(--primary);
+}
+
+nav button.add-person{
+  background:#15803d;
+}
+
+nav button.add-person:hover{
+  background:#166534;
+}
+
+/* MAIN */
+main{
+  max-width:1250px;
+  margin:24px auto;
+  padding:0 18px;
+}
+
+.toolbar{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:18px;
+}
+
+.toolbar-left{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+input,
+select,
+textarea{
+  font:inherit;
+  border:1px solid #d5dbe5;
+  border-radius:8px;
+  padding:9px 11px;
+  background:#fff;
+}
+
+input[type=search]{
+  min-width:260px;
+}
+
+.btn{
+  border:0;
+  border-radius:8px;
+  padding:10px 14px;
+  cursor:pointer;
+  font-weight:700;
+}
+
+.primary{
+  background:var(--primary);
+  color:#fff;
+}
+
+.secondary{
+  background:#e9edf4;
+  color:#172033;
+}
+
+.danger{
+  background:#fee2e2;
+  color:#b91c1c;
+}
+
+/* SECTION */
+.section{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:12px;
+  margin-bottom:22px;
+  overflow:hidden;
+}
+
+.section-title{
+  padding:15px 18px;
+  font-size:17px;
+  font-weight:700;
+  border-bottom:1px solid var(--line);
+}
+
+.section-title.running{
+  color:var(--yellow);
+}
+
+.section-title.done{
+  color:var(--green);
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+th,
+td{
+  padding:12px 14px;
+  border-bottom:1px solid var(--line);
+  text-align:left;
+  vertical-align:top;
+}
+
+th{
+  font-size:12px;
+  text-transform:uppercase;
+  color:var(--muted);
+  background:#fafbfc;
+}
+
+tr:last-child td{
+  border-bottom:0;
+}
+
+.task-name{
+  font-weight:600;
+  white-space:pre-wrap;
+}
+
+.muted{
+  color:var(--muted);
+  font-size:13px;
+}
+
+/* BADGE */
+.badge{
+  display:inline-block;
+  border-radius:999px;
+  padding:5px 9px;
+  font-size:12px;
+  font-weight:700;
+}
+
+.belum{
+  background:#f1f3f6;
+  color:#475569;
+}
+
+.proses{
+  background:#fff3cd;
+  color:var(--yellow);
+}
+
+.selesai{
+  background:#dcfce7;
+  color:var(--green);
+}
+
+/* ACTION */
+.actions{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+}
+
+.actions button{
+  border:0;
+  background:#eef2f7;
+  padding:7px 9px;
+  border-radius:7px;
+  cursor:pointer;
+}
+
+.actions button:hover{
+  background:#dbe3ef;
+}
+
+/* EMPTY */
+.empty{
+  padding:24px;
+  text-align:center;
+  color:var(--muted);
+}
+
+.statusbar{
+  margin-bottom:15px;
+  color:var(--muted);
+  font-size:13px;
+}
+
+.error{
+  color:var(--red);
+  font-weight:700;
+}
+
+/* DASHBOARD */
+.dashboard-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:14px;
+  margin-bottom:22px;
+}
+
+.stat-card{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:18px;
+}
+
+.stat-label{
+  color:var(--muted);
+  font-size:13px;
+  margin-bottom:8px;
+}
+
+.stat-number{
+  font-size:28px;
+  font-weight:700;
+}
+
+.stat-total{
+  color:var(--primary);
+}
+
+.stat-belum{
+  color:#475569;
+}
+
+.stat-proses{
+  color:var(--yellow);
+}
+
+.stat-selesai{
+  color:var(--green);
+}
+
+/* PERSON SUMMARY */
+.person-summary{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:12px;
+  overflow:hidden;
+  margin-bottom:22px;
+}
+
+.person-summary-title{
+  padding:15px 18px;
+  font-weight:700;
+  border-bottom:1px solid var(--line);
+}
+
+.person-row{
+  cursor:pointer;
+}
+
+.person-row:hover{
+  background:#f8fafc;
+}
+
+/* MODAL */
+dialog{
+  border:0;
+  border-radius:14px;
+  padding:0;
+  width:min(620px,92vw);
+  box-shadow:0 20px 70px #0003;
+}
+
+dialog::backdrop{
+  background:#0007;
+}
+
+.modal{
+  padding:22px;
+}
+
+.modal h2{
+  margin:0 0 18px;
+}
+
+.form-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:13px;
+}
+
+.full{
+  grid-column:1/-1;
+}
+
+.field label{
+  display:block;
+  font-size:13px;
+  font-weight:700;
+  margin-bottom:6px;
+}
+
+.field input,
+.field select,
+.field textarea{
+  width:100%;
+}
+
+.field textarea{
+  min-height:100px;
+  resize:vertical;
+}
+
+.modal-actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:8px;
+  margin-top:18px;
+}
+
+/* PERSON LIST */
+.people-list{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  max-height:350px;
+  overflow:auto;
+}
+
+.person-item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:10px 12px;
+  border:1px solid var(--line);
+  border-radius:8px;
+}
+
+.person-name{
+  font-weight:600;
+}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .dashboard-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+
+@media(max-width:700px){
+
+  .form-grid{
+    grid-template-columns:1fr;
+  }
+
+  .full{
+    grid-column:auto;
+  }
+
+  th:nth-child(4),
+  td:nth-child(4){
+    display:none;
+  }
+
+  input[type=search]{
+    min-width:0;
+    width:100%;
+  }
+
+  .dashboard-grid{
+    grid-template-columns:1fr 1fr;
+  }
+}
 </style>
 </head>
+
 <body>
+
 <header>
-  <div class="brand">OUTSTANDING LIST</div>
+
+  <div class="brand">
+    OUTSTANDING LIST
+  </div>
+
   <nav id="nav"></nav>
+
 </header>
 
+
 <main>
+
   <div class="toolbar">
+
     <div class="toolbar-left">
-      <input id="search" type="search" placeholder="🔍 Cari task..." oninput="render()">
-      <select id="sort" onchange="render()">
-        <option value="deadline">Deadline terdekat</option>
-        <option value="newest">Terbaru</option>
-        <option value="oldest">Terlama</option>
+
+      <input
+        id="search"
+        type="search"
+        placeholder="🔍 Cari task..."
+        oninput="render()"
+      >
+
+      <select
+        id="sort"
+        onchange="render()"
+      >
+        <option value="deadline">
+          Deadline terdekat
+        </option>
+
+        <option value="newest">
+          Terbaru
+        </option>
+
+        <option value="oldest">
+          Terlama
+        </option>
       </select>
+
     </div>
-    <button class="btn primary" onclick="openAdd()">+ Tambah Task</button>
+
+
+    <button
+      class="btn primary"
+      onclick="openAdd()"
+    >
+      + Tambah Task
+    </button>
+
   </div>
-  <div id="statusbar" class="statusbar">Menghubungkan ke database...</div>
+
+
+  <div
+    id="statusbar"
+    class="statusbar"
+  >
+    Menghubungkan ke database...
+  </div>
+
+
   <div id="app"></div>
+
 </main>
 
+
+<!-- =========================
+     TASK MODAL
+========================= -->
+
 <dialog id="taskDialog">
+
   <div class="modal">
-    <h2 id="modalTitle">Tambah Task</h2>
-    <form id="taskForm" onsubmit="saveTask(event)">
-      <input type="hidden" id="taskId">
+
+    <h2 id="modalTitle">
+      Tambah Task
+    </h2>
+
+    <form
+      id="taskForm"
+      onsubmit="saveTask(event)"
+    >
+
+      <input
+        type="hidden"
+        id="taskId"
+      >
+
       <div class="form-grid">
+
         <div class="field">
-          <label>PIC</label>
-          <select id="pic" required></select>
+
+          <label>
+            PIC
+          </label>
+
+          <select
+            id="pic"
+            required
+          ></select>
+
         </div>
+
+
         <div class="field">
-          <label>Status</label>
-          <select id="taskStatus" required>
-            <option value="Belum">Belum</option>
-            <option value="Proses">Proses</option>
-            <option value="Selesai">Selesai</option>
+
+          <label>
+            Status
+          </label>
+
+          <select
+            id="taskStatus"
+            required
+          >
+
+            <option value="Belum">
+              Belum
+            </option>
+
+            <option value="Proses">
+              Proses
+            </option>
+
+            <option value="Selesai">
+              Selesai
+            </option>
+
           </select>
+
         </div>
+
+
         <div class="field full">
-          <label>Task</label>
-          <textarea id="task" required placeholder="Tulis task..."></textarea>
+
+          <label>
+            Task
+          </label>
+
+          <textarea
+            id="task"
+            required
+            placeholder="Tulis task..."
+          ></textarea>
+
         </div>
+
+
         <div class="field">
-          <label>Deadline</label>
-          <input id="deadline" type="date">
+
+          <label>
+            Deadline
+          </label>
+
+          <input
+            id="deadline"
+            type="date"
+          >
+
         </div>
+
+
         <div class="field">
-          <label>Keterangan</label>
-          <input id="note" type="text" placeholder="Opsional">
+
+          <label>
+            Keterangan
+          </label>
+
+          <input
+            id="note"
+            type="text"
+            placeholder="Opsional"
+          >
+
         </div>
+
       </div>
+
+
       <div class="modal-actions">
-        <button type="button" class="btn secondary" onclick="taskDialog.close()">Batal</button>
-        <button type="submit" class="btn primary">Simpan</button>
+
+        <button
+          type="button"
+          class="btn secondary"
+          onclick="taskDialog.close()"
+        >
+          Batal
+        </button>
+
+        <button
+          type="submit"
+          class="btn primary"
+        >
+          Simpan
+        </button>
+
       </div>
+
     </form>
+
   </div>
+
 </dialog>
 
-<script>
-/*
-  ==========================================================
-  SUPABASE CONFIG
-  GANTI 2 NILAI DI BAWAH:
-  1. SUPABASE_URL
-  2. SUPABASE_PUBLISHABLE_KEY
-  ==========================================================
-*/
-const SUPABASE_URL = "https://zwgstnuevycnyzgcggxy.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_W1-empf5i4JK4T4v7DNwmA_BV9RXUs7";
 
-const PICS = ["Andry","David","Ferdy","Justin","Henry","Suwandi","Vincent","Hedona"];
+<!-- =========================
+     PERSON MODAL
+========================= -->
+
+<dialog id="personDialog">
+
+  <div class="modal">
+
+    <h2>
+      Tambah Orang
+    </h2>
+
+    <form
+      id="personForm"
+      onsubmit="savePerson(event)"
+    >
+
+      <div class="field">
+
+        <label>
+          Nama Orang
+        </label>
+
+        <input
+          id="personName"
+          type="text"
+          required
+          placeholder="Contoh: Budi"
+          autocomplete="off"
+        >
+
+      </div>
+
+
+      <div class="modal-actions">
+
+        <button
+          type="button"
+          class="btn secondary"
+          onclick="personDialog.close()"
+        >
+          Batal
+        </button>
+
+        <button
+          type="submit"
+          class="btn primary"
+        >
+          Simpan
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</dialog>
+
+
+<!-- =========================
+     MANAGE PEOPLE MODAL
+========================= -->
+
+<dialog id="peopleDialog">
+
+  <div class="modal">
+
+    <h2>
+      Daftar Orang
+    </h2>
+
+    <div
+      id="peopleList"
+      class="people-list"
+    ></div>
+
+
+    <div class="modal-actions">
+
+      <button
+        type="button"
+        class="btn secondary"
+        onclick="peopleDialog.close()"
+      >
+        Tutup
+      </button>
+
+    </div>
+
+  </div>
+
+</dialog>
+
+
+<script>
+
+/*
+==========================================================
+SUPABASE CONFIG
+==========================================================
+
+GANTI 2 NILAI DI BAWAH JIKA DIPERLUKAN:
+
+1. SUPABASE_URL
+2. SUPABASE_PUBLISHABLE_KEY
+
+==========================================================
+*/
+
+const SUPABASE_URL =
+"https://zwgstnuevycnyzgcggxy.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+"sb_publishable_W1-empf5i4JK4T4v7DNwmA_BV9RXUs7";
+
+
+/*
+==========================================================
+VARIABLE
+==========================================================
+*/
+
 let supabaseClient = null;
+
 let tasks = [];
+
+let people = [];
+
 let selectedPIC = "ALL";
 
+
+/*
+==========================================================
+CHECK CONFIG
+==========================================================
+*/
+
 function configured(){
-  return !SUPABASE_URL.includes("PASTE_") && !SUPABASE_PUBLISHABLE_KEY.includes("PASTE_");
+
+  return (
+    !SUPABASE_URL.includes("PASTE_") &&
+    !SUPABASE_PUBLISHABLE_KEY.includes("PASTE_")
+  );
+
 }
-function init(){
+
+
+/*
+==========================================================
+INIT
+==========================================================
+*/
+
+async function init(){
+
   if(configured()){
-    supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
-    loadTasks();
+
+    supabaseClient =
+      supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY
+      );
+
+    await loadPeople();
+
+    await loadTasks();
+
   }else{
+
     renderNav();
+
     document.getElementById("statusbar").innerHTML =
       '<span class="error">Belum terhubung ke Supabase.</span> Buka file ini dan isi SUPABASE_URL + SUPABASE_PUBLISHABLE_KEY.';
+
     render();
+
   }
+
 }
-function renderNav(){
-  const items=["ALL",...PICS];
-  document.getElementById("nav").innerHTML=items.map(p =>
-    `<button class="${selectedPIC===p?'active':''}" onclick="selectPIC('${p}')">${p==="ALL"?"All":p}</button>`
-  ).join("");
-}
-function selectPIC(pic){selectedPIC=pic;renderNav();render();}
-function filtered(){
-  const q=document.getElementById("search").value.trim().toLowerCase();
-  let list=tasks.filter(t => selectedPIC==="ALL" || t.pic===selectedPIC);
-  if(q) list=list.filter(t => [t.pic,t.task,t.note,t.status].join(" ").toLowerCase().includes(q));
-  const sort=document.getElementById("sort").value;
-  list.sort((a,b)=>{
-    if(sort==="newest") return new Date(b.created_at)-new Date(a.created_at);
-    if(sort==="oldest") return new Date(a.created_at)-new Date(b.created_at);
-    const ad=a.deadline||"9999-12-31", bd=b.deadline||"9999-12-31";
-    return ad.localeCompare(bd);
-  });
-  return list;
-}
-function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));}
-function formatDate(v){if(!v)return "-";const [y,m,d]=v.split("-");return `${d}/${m}/${y}`;}
-function badge(s){return `<span class="badge ${s==="Selesai"?"selesai":s==="Proses"?"proses":"belum"}">${esc(s)}</span>`;}
-function render(){
-  const list=filtered();
-  const running=list.filter(t=>t.status!=="Selesai");
-  const done=list.filter(t=>t.status==="Selesai");
-  document.getElementById("app").innerHTML = section("MASIH BERJALAN",running,false) + section("SELESAI",done,true);
-}
-function section(title,list,isDone){
-  let html=`<section class="section"><div class="section-title ${isDone?"done":"running"}">${title} <span class="muted">(${list.length})</span></div>`;
-  if(!list.length) return html+'<div class="empty">Tidak ada task di bagian ini.</div></section>';
-  html+=`<table><thead><tr>${selectedPIC==="ALL"?"<th>PIC</th>":""}<th>Task</th><th>Deadline</th><th>Status</th><th>Keterangan</th><th>Aksi</th></tr></thead><tbody>`;
-  html+=list.map(t=>`<tr>
-    ${selectedPIC==="ALL"?`<td><b>${esc(t.pic)}</b></td>`:""}
-    <td><div class="task-name">${esc(t.task)}</div></td>
-    <td>${formatDate(t.deadline)}</td>
-    <td>${badge(t.status)}</td>
-    <td class="muted">${esc(t.note||"-")}</td>
-    <td><div class="actions">
-      <button onclick="openEdit('${t.id}')">Edit</button>
-      <button onclick="quickStatus('${t.id}','${t.status==="Selesai"?"Proses":"Selesai"}')">${t.status==="Selesai"?"Buka":"Selesai"}</button>
-      <button onclick="deleteTask('${t.id}')">Hapus</button>
-    </div></td>
-  </tr>`).join("");
-  return html+"</tbody></table></section>";
-}
-async function loadTasks(){
-  const {data,error}=await supabaseClient.from("tasks").select("*").order("deadline",{ascending:true,nullsFirst:false});
+
+
+/*
+==========================================================
+LOAD PEOPLE
+==========================================================
+*/
+
+async function loadPeople(){
+
+  const {
+    data,
+    error
+  } = await supabaseClient
+    .from("people")
+    .select("*")
+    .order("name",{ascending:true});
+
+
   if(error){
-    document.getElementById("statusbar").innerHTML='<span class="error">Gagal membaca database:</span> '+esc(error.message);
+
+    /*
+      Jika tabel people belum dibuat,
+      tampilkan pesan yang jelas.
+    */
+
+    document.getElementById("statusbar").innerHTML =
+      '<span class="error">Tabel "people" belum tersedia.</span> Buat tabel people di Supabase terlebih dahulu.';
+
+    people = [];
+
+    renderNav();
+
+    return;
+
+  }
+
+
+  people = data || [];
+
+  renderNav();
+
+  updatePICDropdown();
+
+}
+
+
+/*
+==========================================================
+LOAD TASKS
+==========================================================
+*/
+
+async function loadTasks(){
+
+  const {
+    data,
+    error
+  } = await supabaseClient
+    .from("tasks")
+    .select("*")
+    .order(
+      "deadline",
+      {
+        ascending:true,
+        nullsFirst:false
+      }
+    );
+
+
+  if(error){
+
+    document.getElementById("statusbar").innerHTML =
+      '<span class="error">Gagal membaca database:</span> ' +
+      esc(error.message);
+
+    return;
+
+  }
+
+
+  tasks = data || [];
+
+
+  document.getElementById("statusbar").textContent =
+    `Terhubung ke Supabase • ${tasks.length} task • ${people.length} orang`;
+
+
+  render();
+
+}
+
+
+/*
+==========================================================
+NAVBAR
+==========================================================
+*/
+
+function renderNav(){
+
+  let html = "";
+
+
+  /*
+    OVERALL
+  */
+
+  html += `
+    <button
+      class="${selectedPIC==="ALL" ? "active" : ""}"
+      onclick="selectPIC('ALL')"
+    >
+      Overall
+    </button>
+  `;
+
+
+  /*
+    NAMA ORANG
+  */
+
+  people.forEach(person => {
+
+    const name = person.name;
+
+    html += `
+      <button
+        class="${selectedPIC===name ? "active" : ""}"
+        onclick="selectPIC('${escapeJS(name)}')"
+      >
+        ${esc(name)}
+      </button>
+    `;
+
+  });
+
+
+  /*
+    TAMBAH ORANG
+  */
+
+  html += `
+    <button
+      class="add-person"
+      onclick="openAddPerson()"
+    >
+      + Orang
+    </button>
+  `;
+
+
+  /*
+    KELOLA ORANG
+  */
+
+  html += `
+    <button
+      onclick="openPeopleManager()"
+    >
+      ⚙ Kelola
+    </button>
+  `;
+
+
+  document.getElementById("nav").innerHTML = html;
+
+}
+
+
+/*
+==========================================================
+SELECT PIC
+==========================================================
+*/
+
+function selectPIC(pic){
+
+  selectedPIC = pic;
+
+  renderNav();
+
+  render();
+
+}
+
+
+/*
+==========================================================
+UPDATE PIC DROPDOWN
+==========================================================
+*/
+
+function updatePICDropdown(){
+
+  const select =
+    document.getElementById("pic");
+
+
+  if(!select){
     return;
   }
-  tasks=data||[];
-  document.getElementById("statusbar").textContent=`Terhubung ke Supabase • ${tasks.length} task`;
-  render();
+
+
+  select.innerHTML =
+    people.map(person =>
+      `<option value="${esc(person.name)}">
+        ${esc(person.name)}
+      </option>`
+    ).join("");
+
+
 }
+
+
+/*
+==========================================================
+FILTER TASK
+==========================================================
+*/
+
+function filtered(){
+
+  const searchInput =
+    document.getElementById("search");
+
+
+  const q =
+    searchInput
+      ? searchInput.value.trim().toLowerCase()
+      : "";
+
+
+  let list = [...tasks];
+
+
+  /*
+    FILTER PIC
+  */
+
+  if(selectedPIC !== "ALL"){
+
+    list =
+      list.filter(
+        t => t.pic === selectedPIC
+      );
+
+  }
+
+
+  /*
+    SEARCH
+  */
+
+  if(q){
+
+    list =
+      list.filter(t =>
+
+        [
+          t.pic,
+          t.task,
+          t.note,
+          t.status
+        ]
+        .join(" ")
+        .toLowerCase()
+        .includes(q)
+
+      );
+
+  }
+
+
+  /*
+    SORT
+  */
+
+  const sort =
+    document.getElementById("sort").value;
+
+
+  list.sort((a,b)=>{
+
+    if(sort === "newest"){
+
+      return (
+        new Date(b.created_at) -
+        new Date(a.created_at)
+      );
+
+    }
+
+
+    if(sort === "oldest"){
+
+      return (
+        new Date(a.created_at) -
+        new Date(b.created_at)
+      );
+
+    }
+
+
+    const ad =
+      a.deadline || "9999-12-31";
+
+
+    const bd =
+      b.deadline || "9999-12-31";
+
+
+    return ad.localeCompare(bd);
+
+  });
+
+
+  return list;
+
+}
+
+
+/*
+==========================================================
+ESCAPE HTML
+==========================================================
+*/
+
+function esc(s){
+
+  return String(s ?? "")
+    .replace(
+      /[&<>"']/g,
+      m => ({
+        "&":"&amp;",
+        "<":"&lt;",
+        ">":"&gt;",
+        '"':"&quot;",
+        "'":"&#039;"
+      }[m])
+    );
+
+}
+
+
+/*
+==========================================================
+ESCAPE JAVASCRIPT
+==========================================================
+*/
+
+function escapeJS(s){
+
+  return String(s ?? "")
+    .replace(/\\/g,"\\\\")
+    .replace(/'/g,"\\'")
+    .replace(/\n/g,"\\n")
+    .replace(/\r/g,"\\r");
+
+}
+
+
+/*
+==========================================================
+FORMAT DATE
+==========================================================
+*/
+
+function formatDate(v){
+
+  if(!v){
+    return "-";
+  }
+
+
+  const [
+    y,
+    m,
+    d
+  ] = v.split("-");
+
+
+  return `${d}/${m}/${y}`;
+
+}
+
+
+/*
+==========================================================
+BADGE
+==========================================================
+*/
+
+function badge(s){
+
+  return `
+    <span
+      class="badge ${
+        s==="Selesai"
+          ? "selesai"
+          : s==="Proses"
+            ? "proses"
+            : "belum"
+      }"
+    >
+      ${esc(s)}
+    </span>
+  `;
+
+}
+
+
+/*
+==========================================================
+MAIN RENDER
+==========================================================
+*/
+
+function render(){
+
+  if(selectedPIC === "ALL"){
+
+    renderOverall();
+
+  }else{
+
+    renderPerson();
+
+  }
+
+}
+
+
+/*
+==========================================================
+OVERALL
+==========================================================
+*/
+
+function renderOverall(){
+
+  const list =
+    filtered();
+
+
+  const total =
+    list.length;
+
+
+  const belum =
+    list.filter(
+      t => t.status === "Belum"
+    ).length;
+
+
+  const proses =
+    list.filter(
+      t => t.status === "Proses"
+    ).length;
+
+
+  const selesai =
+    list.filter(
+      t => t.status === "Selesai"
+    ).length;
+
+
+  let html = "";
+
+
+  /*
+    DASHBOARD
+  */
+
+  html += `
+
+    <div class="dashboard-grid">
+
+      <div class="stat-card">
+
+        <div class="stat-label">
+          TOTAL TASK
+        </div>
+
+        <div class="stat-number stat-total">
+          ${total}
+        </div>
+
+      </div>
+
+
+      <div class="stat-card">
+
+        <div class="stat-label">
+          BELUM
+        </div>
+
+        <div class="stat-number stat-belum">
+          ${belum}
+        </div>
+
+      </div>
+
+
+      <div class="stat-card">
+
+        <div class="stat-label">
+          PROSES
+        </div>
+
+        <div class="stat-number stat-proses">
+          ${proses}
+        </div>
+
+      </div>
+
+
+      <div class="stat-card">
+
+        <div class="stat-label">
+          SELESAI
+        </div>
+
+        <div class="stat-number stat-selesai">
+          ${selesai}
+        </div>
+
+      </div>
+
+    </div>
+
+  `;
+
+
+  /*
+    SUMMARY PER ORANG
+  */
+
+  html += `
+
+    <div class="person-summary">
+
+      <div class="person-summary-title">
+        RINGKASAN TIM
+      </div>
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>
+              Orang
+            </th>
+
+            <th>
+              Total
+            </th>
+
+            <th>
+              Belum
+            </th>
+
+            <th>
+              Proses
+            </th>
+
+            <th>
+              Selesai
+            </th>
+
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+  `;
+
+
+  people.forEach(person => {
+
+    const personTasks =
+      tasks.filter(
+        t => t.pic === person.name
+      );
+
+
+    const personBelum =
+      personTasks.filter(
+        t => t.status === "Belum"
+      ).length;
+
+
+    const personProses =
+      personTasks.filter(
+        t => t.status === "Proses"
+      ).length;
+
+
+    const personSelesai =
+      personTasks.filter(
+        t => t.status === "Selesai"
+      ).length;
+
+
+    html += `
+
+      <tr
+        class="person-row"
+        onclick="selectPIC('${escapeJS(person.name)}')"
+      >
+
+        <td>
+          <b>${esc(person.name)}</b>
+        </td>
+
+        <td>
+          ${personTasks.length}
+        </td>
+
+        <td>
+          ${personBelum}
+        </td>
+
+        <td>
+          ${personProses}
+        </td>
+
+        <td>
+          ${personSelesai}
+        </td>
+
+      </tr>
+
+    `;
+
+  });
+
+
+  html += `
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  `;
+
+
+  /*
+    SEMUA TASK
+  */
+
+  html += section(
+    "SEMUA TASK",
+    list,
+    false
+  );
+
+
+  document.getElementById("app").innerHTML =
+    html;
+
+}
+
+
+/*
+==========================================================
+PERSON VIEW
+==========================================================
+*/
+
+function renderPerson(){
+
+  const list =
+    filtered();
+
+
+  const running =
+    list.filter(
+      t => t.status !== "Selesai"
+    );
+
+
+  const done =
+    list.filter(
+      t => t.status === "Selesai"
+    );
+
+
+  let html = `
+
+    <div
+      style="
+        font-size:20px;
+        font-weight:700;
+        margin-bottom:18px;
+      "
+    >
+      Task ${esc(selectedPIC)}
+    </div>
+
+  `;
+
+
+  html +=
+    section(
+      "MASIH BERJALAN",
+      running,
+      false
+    );
+
+
+  html +=
+    section(
+      "SELESAI",
+      done,
+      true
+    );
+
+
+  document.getElementById("app").innerHTML =
+    html;
+
+}
+
+
+/*
+==========================================================
+SECTION TASK
+==========================================================
+*/
+
+function section(
+  title,
+  list,
+  isDone
+){
+
+  let html = `
+
+    <section class="section">
+
+      <div
+        class="section-title ${
+          isDone
+            ? "done"
+            : "running"
+        }"
+      >
+
+        ${title}
+
+        <span class="muted">
+          (${list.length})
+        </span>
+
+      </div>
+
+  `;
+
+
+  if(!list.length){
+
+    return (
+      html +
+      `
+        <div class="empty">
+          Tidak ada task di bagian ini.
+        </div>
+      </section>
+      `
+    );
+
+  }
+
+
+  html += `
+
+    <table>
+
+      <thead>
+
+        <tr>
+
+          ${
+            selectedPIC === "ALL"
+              ? "<th>PIC</th>"
+              : ""
+          }
+
+          <th>
+            Task
+          </th>
+
+          <th>
+            Deadline
+          </th>
+
+          <th>
+            Status
+          </th>
+
+          <th>
+            Keterangan
+          </th>
+
+          <th>
+            Aksi
+          </th>
+
+        </tr>
+
+      </thead>
+
+      <tbody>
+
+  `;
+
+
+  html += list.map(t => `
+
+    <tr>
+
+      ${
+        selectedPIC === "ALL"
+          ? `
+            <td>
+              <b>
+                ${esc(t.pic)}
+              </b>
+            </td>
+          `
+          : ""
+      }
+
+
+      <td>
+
+        <div class="task-name">
+
+          ${esc(t.task)}
+
+        </div>
+
+      </td>
+
+
+      <td>
+
+        ${formatDate(t.deadline)}
+
+      </td>
+
+
+      <td>
+
+        ${badge(t.status)}
+
+      </td>
+
+
+      <td class="muted">
+
+        ${esc(t.note || "-")}
+
+      </td>
+
+
+      <td>
+
+        <div class="actions">
+
+          <button
+            onclick="openEdit('${escapeJS(t.id)}')"
+          >
+            Edit
+          </button>
+
+
+          <button
+            onclick="
+              quickStatus(
+                '${escapeJS(t.id)}',
+                '${t.status==="Selesai"?"Proses":"Selesai"}'
+              )
+            "
+          >
+
+            ${
+              t.status === "Selesai"
+                ? "Buka"
+                : "Selesai"
+            }
+
+          </button>
+
+
+          <button
+            onclick="
+              deleteTask(
+                '${escapeJS(t.id)}'
+              )
+            "
+          >
+            Hapus
+          </button>
+
+        </div>
+
+      </td>
+
+    </tr>
+
+  `).join("");
+
+
+  html += `
+
+      </tbody>
+
+    </table>
+
+  </section>
+
+  `;
+
+
+  return html;
+
+}
+
+
+/*
+==========================================================
+OPEN ADD TASK
+==========================================================
+*/
+
 function openAdd(){
-  document.getElementById("modalTitle").textContent="Tambah Task";
-  document.getElementById("taskId").value="";
+
+  if(!people.length){
+
+    alert(
+      "Belum ada orang. Tambahkan orang terlebih dahulu."
+    );
+
+    openAddPerson();
+
+    return;
+
+  }
+
+
+  document.getElementById("modalTitle").textContent =
+    "Tambah Task";
+
+
+  document.getElementById("taskId").value =
+    "";
+
+
   document.getElementById("taskForm").reset();
-  document.getElementById("pic").value=selectedPIC!=="ALL"?selectedPIC:PICS[0];
-  document.getElementById("taskStatus").value="Belum";
+
+
+  updatePICDropdown();
+
+
+  if(selectedPIC !== "ALL"){
+
+    document.getElementById("pic").value =
+      selectedPIC;
+
+  }else{
+
+    document.getElementById("pic").value =
+      people[0].name;
+
+  }
+
+
+  document.getElementById("taskStatus").value =
+    "Belum";
+
+
   taskDialog.showModal();
+
 }
+
+
+/*
+==========================================================
+OPEN EDIT TASK
+==========================================================
+*/
+
 function openEdit(id){
-  const t=tasks.find(x=>String(x.id)===String(id)); if(!t)return;
-  document.getElementById("modalTitle").textContent="Edit Task";
-  document.getElementById("taskId").value=t.id;
-  document.getElementById("pic").value=t.pic;
-  document.getElementById("task").value=t.task;
-  document.getElementById("taskStatus").value=t.status;
-  document.getElementById("deadline").value=t.deadline||"";
-  document.getElementById("note").value=t.note||"";
+
+  const t =
+    tasks.find(
+      x => String(x.id) === String(id)
+    );
+
+
+  if(!t){
+    return;
+  }
+
+
+  document.getElementById("modalTitle").textContent =
+    "Edit Task";
+
+
+  document.getElementById("taskId").value =
+    t.id;
+
+
+  updatePICDropdown();
+
+
+  document.getElementById("pic").value =
+    t.pic;
+
+
+  document.getElementById("task").value =
+    t.task;
+
+
+  document.getElementById("taskStatus").value =
+    t.status;
+
+
+  document.getElementById("deadline").value =
+    t.deadline || "";
+
+
+  document.getElementById("note").value =
+    t.note || "";
+
+
   taskDialog.showModal();
+
 }
+
+
+/*
+==========================================================
+SAVE TASK
+==========================================================
+*/
+
 async function saveTask(e){
+
   e.preventDefault();
-  const id=document.getElementById("taskId").value;
-  const payload={
-    pic:document.getElementById("pic").value,
-    task:document.getElementById("task").value.trim(),
-    status:document.getElementById("taskStatus").value,
-    deadline:document.getElementById("deadline").value||null,
-    note:document.getElementById("note").value.trim()||null
+
+
+  const id =
+    document.getElementById("taskId").value;
+
+
+  const payload = {
+
+    pic:
+      document.getElementById("pic").value,
+
+    task:
+      document
+        .getElementById("task")
+        .value
+        .trim(),
+
+    status:
+      document.getElementById("taskStatus").value,
+
+    deadline:
+      document.getElementById("deadline").value
+        || null,
+
+    note:
+      document
+        .getElementById("note")
+        .value
+        .trim()
+        || null
+
   };
+
+
   let result;
-  if(id) result=await supabaseClient.from("tasks").update(payload).eq("id",id);
-  else result=await supabaseClient.from("tasks").insert(payload);
-  if(result.error){alert("Gagal menyimpan: "+result.error.message);return;}
-  taskDialog.close(); await loadTasks();
-}
-async function quickStatus(id,status){
-  const {error}=await supabaseClient.from("tasks").update({status}).eq("id",id);
-  if(error){alert("Gagal mengubah status: "+error.message);return;}
+
+
+  if(id){
+
+    result =
+      await supabaseClient
+        .from("tasks")
+        .update(payload)
+        .eq("id",id);
+
+  }else{
+
+    result =
+      await supabaseClient
+        .from("tasks")
+        .insert(payload);
+
+  }
+
+
+  if(result.error){
+
+    alert(
+      "Gagal menyimpan: " +
+      result.error.message
+    );
+
+    return;
+
+  }
+
+
+  taskDialog.close();
+
+
   await loadTasks();
+
 }
+
+
+/*
+==========================================================
+QUICK STATUS
+==========================================================
+*/
+
+async function quickStatus(
+  id,
+  status
+){
+
+  const {
+    error
+  } =
+    await supabaseClient
+      .from("tasks")
+      .update({
+        status:status
+      })
+      .eq("id",id);
+
+
+  if(error){
+
+    alert(
+      "Gagal mengubah status: " +
+      error.message
+    );
+
+    return;
+
+  }
+
+
+  await loadTasks();
+
+}
+
+
+/*
+==========================================================
+DELETE TASK
+==========================================================
+*/
+
 async function deleteTask(id){
-  const t=tasks.find(x=>String(x.id)===String(id));
-  if(!confirm(`Hapus task "${t?.task||""}"?`))return;
-  const {error}=await supabaseClient.from("tasks").delete().eq("id",id);
-  if(error){alert("Gagal menghapus: "+error.message);return;}
+
+  const t =
+    tasks.find(
+      x => String(x.id) === String(id)
+    );
+
+
+  if(
+    !confirm(
+      `Hapus task "${t?.task || ""}"?`
+    )
+  ){
+
+    return;
+
+  }
+
+
+  const {
+    error
+  } =
+    await supabaseClient
+      .from("tasks")
+      .delete()
+      .eq("id",id);
+
+
+  if(error){
+
+    alert(
+      "Gagal menghapus: " +
+      error.message
+    );
+
+    return;
+
+  }
+
+
   await loadTasks();
+
 }
-document.getElementById("pic").innerHTML=PICS.map(p=>`<option>${p}</option>`).join("");
+
+
+/*
+==========================================================
+OPEN ADD PERSON
+==========================================================
+*/
+
+function openAddPerson(){
+
+  document
+    .getElementById("personForm")
+    .reset();
+
+
+  personDialog.showModal();
+
+
+  setTimeout(()=>{
+
+    document
+      .getElementById("personName")
+      .focus();
+
+  },100);
+
+}
+
+
+/*
+==========================================================
+SAVE PERSON
+==========================================================
+*/
+
+async function savePerson(e){
+
+  e.preventDefault();
+
+
+  const input =
+    document.getElementById("personName");
+
+
+  const name =
+    input.value.trim();
+
+
+  if(!name){
+    return;
+  }
+
+
+  /*
+    CEK NAMA DUPLIKAT
+  */
+
+  const duplicate =
+    people.some(
+      p =>
+        p.name.toLowerCase() ===
+        name.toLowerCase()
+    );
+
+
+  if(duplicate){
+
+    alert(
+      "Nama tersebut sudah ada."
+    );
+
+    return;
+
+  }
+
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("people")
+      .insert({
+        name:name
+      })
+      .select()
+      .single();
+
+
+  if(error){
+
+    alert(
+      "Gagal menambahkan orang: " +
+      error.message
+    );
+
+    return;
+
+  }
+
+
+  people.push(data);
+
+
+  people.sort(
+    (a,b) =>
+      a.name.localeCompare(
+        b.name
+      )
+  );
+
+
+  personDialog.close();
+
+
+  selectedPIC =
+    data.name;
+
+
+  renderNav();
+
+
+  updatePICDropdown();
+
+
+  render();
+
+
+  document.getElementById("statusbar").textContent =
+    `Terhubung ke Supabase • ${tasks.length} task • ${people.length} orang`;
+
+}
+
+
+/*
+==========================================================
+OPEN PEOPLE MANAGER
+==========================================================
+*/
+
+function openPeopleManager(){
+
+  renderPeopleManager();
+
+  peopleDialog.showModal();
+
+}
+
+
+/*
+==========================================================
+RENDER PEOPLE MANAGER
+==========================================================
+*/
+
+function renderPeopleManager(){
+
+  const container =
+    document.getElementById("peopleList");
+
+
+  if(!people.length){
+
+    container.innerHTML =
+      `
+        <div class="empty">
+          Belum ada orang.
+        </div>
+      `;
+
+    return;
+
+  }
+
+
+  container.innerHTML =
+    people.map(person => {
+
+      const count =
+        tasks.filter(
+          t => t.pic === person.name
+        ).length;
+
+
+      return `
+
+        <div class="person-item">
+
+          <div>
+
+            <div class="person-name">
+              ${esc(person.name)}
+            </div>
+
+            <div class="muted">
+              ${count} task
+            </div>
+
+          </div>
+
+
+          <button
+            class="btn danger"
+            onclick="
+              deletePerson(
+                '${escapeJS(person.id)}'
+              )
+            "
+          >
+            Hapus
+          </button>
+
+        </div>
+
+      `;
+
+    }).join("");
+
+}
+
+
+/*
+==========================================================
+DELETE PERSON
+==========================================================
+*/
+
+async function deletePerson(id){
+
+  const person =
+    people.find(
+      p => String(p.id) === String(id)
+    );
+
+
+  if(!person){
+    return;
+  }
+
+
+  const taskCount =
+    tasks.filter(
+      t => t.pic === person.name
+    ).length;
+
+
+  if(taskCount > 0){
+
+    alert(
+      `${person.name} masih memiliki ${taskCount} task.\n\n` +
+      `Pindahkan atau hapus task tersebut terlebih dahulu sebelum menghapus orang ini.`
+    );
+
+    return;
+
+  }
+
+
+  if(
+    !confirm(
+      `Hapus ${person.name} dari daftar orang?`
+    )
+  ){
+
+    return;
+
+  }
+
+
+  const {
+    error
+  } =
+    await supabaseClient
+      .from("people")
+      .delete()
+      .eq("id",id);
+
+
+  if(error){
+
+    alert(
+      "Gagal menghapus orang: " +
+      error.message
+    );
+
+    return;
+
+  }
+
+
+  people =
+    people.filter(
+      p => String(p.id) !== String(id)
+    );
+
+
+  if(selectedPIC === person.name){
+
+    selectedPIC = "ALL";
+
+  }
+
+
+  renderNav();
+
+  updatePICDropdown();
+
+  renderPeopleManager();
+
+  render();
+
+
+  document.getElementById("statusbar").textContent =
+    `Terhubung ke Supabase • ${tasks.length} task • ${people.length} orang`;
+
+}
+
+
+/*
+==========================================================
+INITIAL PIC DROPDOWN
+==========================================================
+*/
+
+updatePICDropdown();
+
+
+/*
+==========================================================
+START APP
+==========================================================
+*/
+
 init();
+
 </script>
+
 </body>
 </html>
