@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Outstanding List</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
@@ -116,13 +116,60 @@ dialog::backdrop{background:rgba(0,0,0,.55)}
 .delete-person-btn{background:#fee2e2;color:#b91c1c}
 .delete-person-btn:hover{background:#fecaca}
 
+.scroll-hint{display:none}
+
 @media(max-width:700px){
-  main{padding:10px}
+  body{-webkit-tap-highlight-color:transparent}
+  input,select,textarea{font-size:16px} /* cegah zoom otomatis di iPhone */
+
+  /* header & navigasi: satu baris yang bisa digeser */
+  header{padding:10px 12px;padding-top:max(10px,env(safe-area-inset-top))}
+  .brand{font-size:15px;margin-bottom:8px}
+  nav{flex-wrap:nowrap;overflow-x:auto;gap:6px;padding-bottom:4px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  nav::-webkit-scrollbar{display:none}
+  nav button{flex:none;padding:10px 14px;font-size:14px}
+
+  main{padding:10px 10px 30px}
+
+  /* toolbar */
+  .toolbar{flex-direction:column;align-items:stretch;gap:8px}
+  .toolbar-left{flex-direction:column;width:100%}
+  input[type=search],.toolbar-left select{min-width:0;width:100%}
+  .toolbar .primary{width:100%;padding:13px}
+
+  /* dialog */
+  dialog{width:94vw;max-height:92vh;overflow-y:auto}
+  .modal{padding:16px}
   .form-grid{grid-template-columns:1fr}
   .full{grid-column:auto}
-  input[type=search]{min-width:0;width:100%}
-  .toolbar-left,.toolbar-left select,.toolbar .primary{width:100%}
-  .task-actions button,.actions button{height:34px}
+  .modal-actions .btn{flex:1;padding:13px}
+  .people-item-actions button{padding:9px 12px}
+
+  /* tampilan Overall: tabel digeser ke samping */
+  .overall-table{min-width:var(--tw-m,900px)}
+  .scroll-hint{display:block;color:var(--muted);font-size:12px;margin:0 0 8px}
+  .task-text{font-size:14px}
+  .task-actions{gap:8px}
+  .task-actions button{height:38px;min-width:46px;font-size:13px}
+  .task-actions button.finish-btn{min-width:52px;font-size:16px}
+
+  /* tampilan per orang: tiap baris jadi kartu */
+  .person-title{font-size:16px;padding:12px}
+  .person-table,.person-table tbody{display:block}
+  .person-table thead{display:none}
+  .person-table tr{display:grid;grid-template-columns:32px 1fr;gap:3px 8px;padding:12px;border-bottom:1px solid var(--line)}
+  .person-table tr:last-child{border-bottom:0}
+  .person-table td{display:block;padding:0;border:0;min-width:0}
+  .person-table tr.done-row{background:#dcfce7}
+  .person-table tr.done-row td,.person-table tr.done-row:hover td{background:transparent}
+  .person-table .col-no{width:auto;grid-column:1;grid-row:1;text-align:left;font-size:14px}
+  .person-table td.td-task{grid-column:2;grid-row:1;font-size:14px}
+  .person-table td[data-label]{grid-column:2;font-size:13px}
+  .person-table td[data-label]::before{content:attr(data-label) ": ";color:var(--muted);font-size:12px}
+  .person-table td.is-empty{display:none}
+  .person-table td.td-actions{grid-column:1/-1;margin-top:8px}
+  .actions{gap:8px;width:100%}
+  .actions button{flex:1;height:42px;font-size:13px}
 }
 </style>
 </head>
@@ -306,7 +353,8 @@ function render(){
 
 function renderOverall(){
   const list = filteredTasks();
-  return renderOverallTable("OUTSTANDING LIST", list.filter(t => t.status !== "Selesai"), false)
+  return `<div class="scroll-hint">↔ Geser ke samping untuk melihat semua orang</div>`
+       + renderOverallTable("OUTSTANDING LIST", list.filter(t => t.status !== "Selesai"), false)
        + renderOverallTable("SELESAI", list.filter(t => t.status === "Selesai"), true);
 }
 
@@ -347,7 +395,7 @@ function renderOverallTable(title, list, isDone){
   let html = `<div class="overall-section"><div class="overall-heading">`
     + `<div class="overall-heading-title ${titleCls}">${title}</div>`
     + `<div class="overall-count">${list.length} task</div></div>`
-    + `<div class="overall-wrapper"><table class="overall-table"><thead><tr>`;
+    + `<div class="overall-wrapper"><table class="overall-table" style="--tw-m:${people.length * 170}px"><thead><tr>`;
 
   people.forEach(p => {
     html += `<th><button class="person-header-button" data-person="${esc(p.name)}">${esc(p.name)}</button></th>`;
@@ -397,11 +445,11 @@ function renderPersonTable(list){
 
     html += `<tr class="${t.status === "Selesai" ? "done-row" : ""}">`
       + `<td class="col-no">${i + 1}</td>`
-      + `<td><div class="task-name">${esc(t.task)}</div></td>`
-      + `<td>${formatDate(t.deadline)}</td>`
-      + `<td>${statusBadge(t.status)}</td>`
-      + `<td class="muted">${esc(t.note || "-")}</td>`
-      + `<td><div class="actions">`
+      + `<td class="td-task"><div class="task-name">${esc(t.task)}</div></td>`
+      + `<td data-label="Deadline" class="${t.deadline ? "" : "is-empty"}">${formatDate(t.deadline)}</td>`
+      + `<td data-label="Status">${statusBadge(t.status)}</td>`
+      + `<td data-label="Keterangan" class="muted ${t.note ? "" : "is-empty"}">${esc(t.note || "-")}</td>`
+      + `<td class="td-actions"><div class="actions">`
       + `<button data-action="edit" data-id="${t.id}">Edit</button>`
       + toggleBtn
       + `<button data-action="delete" data-id="${t.id}">Hapus</button>`
