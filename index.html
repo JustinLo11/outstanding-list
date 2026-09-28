@@ -13,58 +13,39 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-
 <style>
 
 /* =========================================================
    GLOBAL
 ========================================================= */
 
-:root{
+:root {
+    --bg: #f4f6f8;
+    --card: #ffffff;
+    --text: #1f2937;
+    --muted: #6b7280;
+    --line: #e5e7eb;
 
-    --bg:#f4f6f8;
-    --card:#ffffff;
+    --primary: #2563eb;
+    --green: #15803d;
+    --green-soft: #dcfce7;
 
-    --text:#1f2937;
-    --muted:#6b7280;
+    --yellow-soft: #fff7ed;
 
-    --line:#e5e7eb;
+    --red: #dc2626;
 
-    --primary:#2563eb;
-    --primary-soft:#eff6ff;
-
-    --green:#15803d;
-    --green-soft:#dcfce7;
-
-    --yellow:#b45309;
-    --yellow-soft:#fff7ed;
-
-    --red:#dc2626;
-    --red-soft:#fef2f2;
-
-    --shadow:0 3px 12px rgba(15,23,42,.06);
-
+    --shadow: 0 2px 10px rgba(15, 23, 42, .06);
 }
 
-
-*{
-    box-sizing:border-box;
+* {
+    box-sizing: border-box;
 }
 
-
-body{
-
-    margin:0;
-
-    font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
-
-    background:var(--bg);
-
-    color:var(--text);
-
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--bg);
+    color: var(--text);
 }
 
 
@@ -72,100 +53,55 @@ body{
    HEADER
 ========================================================= */
 
-header{
-
-    background:#172033;
-
-    color:#fff;
-
-    padding:16px 22px;
-
-    position:sticky;
-
-    top:0;
-
-    z-index:100;
-
-    box-shadow:
-        0 2px 12px rgba(0,0,0,.12);
-
+header {
+    background: #172033;
+    color: white;
+    padding: 14px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 10px rgba(0,0,0,.12);
 }
 
-
-.brand{
-
-    font-size:21px;
-
-    font-weight:700;
-
-    margin-bottom:13px;
-
-    letter-spacing:.2px;
-
+.brand {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 12px;
 }
 
-
-nav{
-
-    display:flex;
-
-    gap:7px;
-
-    flex-wrap:wrap;
-
-    align-items:center;
-
+nav {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    align-items: center;
 }
 
-
-nav button{
-
-    border:0;
-
-    background:#2b3850;
-
-    color:#fff;
-
-    padding:8px 13px;
-
-    border-radius:8px;
-
-    cursor:pointer;
-
-    font-weight:600;
-
-    transition:.15s;
-
+nav button {
+    border: 0;
+    background: #2b3850;
+    color: white;
+    padding: 7px 12px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 13px;
+    transition: .15s;
 }
 
-
-nav button:hover{
-
-    background:#3b4a65;
-
-    transform:translateY(-1px);
-
+nav button:hover {
+    background: #3d4c68;
 }
 
-
-nav button.active{
-
-    background:var(--primary);
-
+nav button.active {
+    background: var(--primary);
 }
 
-
-nav button.add-person{
-
-    background:#15803d;
-
+nav button.add-person {
+    background: #15803d;
 }
 
-
-nav button.manage-person{
-
-    background:#475569;
-
+nav button.manage-person {
+    background: #475569;
 }
 
 
@@ -173,12 +109,9 @@ nav button.manage-person{
    MAIN
 ========================================================= */
 
-main{
-
-    width:100%;
-
-    padding:20px;
-
+main {
+    width: 100%;
+    padding: 18px;
 }
 
 
@@ -186,131 +119,70 @@ main{
    TOOLBAR
 ========================================================= */
 
-.toolbar{
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    gap:10px;
-
-    flex-wrap:wrap;
-
-    margin-bottom:13px;
-
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
 }
 
-
-.toolbar-left{
-
-    display:flex;
-
-    gap:9px;
-
-    flex-wrap:wrap;
-
+.toolbar-left {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
 }
-
 
 input,
 select,
-textarea{
-
-    font:inherit;
-
-    border:1px solid #d5dbe3;
-
-    border-radius:8px;
-
-    padding:9px 11px;
-
-    background:#fff;
-
-    color:var(--text);
-
-    outline:none;
-
+textarea {
+    font: inherit;
+    border: 1px solid #d5dbe3;
+    border-radius: 7px;
+    padding: 8px 10px;
+    background: white;
+    color: var(--text);
+    outline: none;
 }
-
 
 input:focus,
 select:focus,
-textarea:focus{
-
-    border-color:#93c5fd;
-
-    box-shadow:
-        0 0 0 3px rgba(37,99,235,.08);
-
+textarea:focus {
+    border-color: #93c5fd;
+    box-shadow: 0 0 0 3px rgba(37,99,235,.08);
 }
 
-
-input[type=search]{
-
-    min-width:280px;
-
+input[type="search"] {
+    min-width: 280px;
 }
 
-
-.btn{
-
-    border:0;
-
-    border-radius:8px;
-
-    padding:10px 14px;
-
-    cursor:pointer;
-
-    font-weight:700;
-
-    transition:.15s;
-
+.btn {
+    border: 0;
+    border-radius: 7px;
+    padding: 9px 13px;
+    cursor: pointer;
+    font-weight: 700;
 }
 
-
-.btn:hover{
-
-    transform:translateY(-1px);
-
+.primary {
+    background: var(--primary);
+    color: white;
 }
 
-
-.primary{
-
-    background:var(--primary);
-
-    color:#fff;
-
+.secondary {
+    background: #eef2f7;
+    color: var(--text);
 }
 
-
-.secondary{
-
-    background:#eef2f7;
-
-    color:var(--text);
-
+.success {
+    background: var(--green);
+    color: white;
 }
 
-
-.success{
-
-    background:var(--green);
-
-    color:#fff;
-
-}
-
-
-.danger{
-
-    background:var(--red);
-
-    color:#fff;
-
+.danger {
+    background: var(--red);
+    color: white;
 }
 
 
@@ -318,104 +190,50 @@ input[type=search]{
    STATUS BAR
 ========================================================= */
 
-.statusbar{
-
-    margin-bottom:14px;
-
-    color:var(--muted);
-
-    font-size:13px;
-
+.statusbar {
+    margin-bottom: 12px;
+    color: var(--muted);
+    font-size: 13px;
 }
 
-
-.error{
-
-    color:var(--red);
-
-    font-weight:700;
-
+.error {
+    color: var(--red);
+    font-weight: 700;
 }
 
 
 /* =========================================================
-   OVERALL WRAPPER
+   OVERALL SECTION
 ========================================================= */
 
-.overall-section{
-
-    margin-bottom:24px;
-
+.overall-section {
+    margin-bottom: 20px;
 }
 
-
-.overall-heading{
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    margin-bottom:10px;
-
+.overall-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
 }
 
-
-.overall-heading-title{
-
-    font-size:17px;
-
-    font-weight:700;
-
-    color:var(--text);
-
+.overall-heading-title {
+    font-size: 16px;
+    font-weight: 700;
 }
 
-
-.overall-heading-title.running{
-
-    color:#475569;
-
+.overall-heading-title.running {
+    color: #475569;
 }
 
-
-.overall-heading-title.done{
-
-    color:var(--green);
-
+.overall-heading-title.done {
+    color: var(--green);
 }
 
-
-.overall-count{
-
-    color:var(--muted);
-
-    font-size:13px;
-
-    font-weight:600;
-
-}
-
-
-/* =========================================================
-   OVERALL TABLE CONTAINER
-========================================================= */
-
-.overall-wrapper{
-
-    width:100%;
-
-    overflow-x:auto;
-
-    background:#fff;
-
-    border:1px solid #e1e5ea;
-
-    border-radius:12px;
-
-    box-shadow:var(--shadow);
-
+.overall-count {
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 600;
 }
 
 
@@ -423,85 +241,57 @@ input[type=search]{
    OVERALL TABLE
 ========================================================= */
 
-.overall-table{
+.overall-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    background: white;
+    border: 1px solid #e1e5ea;
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+}
 
-    width:100%;
-
-    min-width:900px;
-
-    border-collapse:separate;
-
-    border-spacing:0;
-
-    table-layout:fixed;
-
+.overall-table {
+    width: 100%;
+    min-width: 900px;
+    border-collapse: separate;
+    border-spacing: 0;
+    table-layout: fixed;
 }
 
 
 /* =========================================================
-   PERSON HEADER
+   HEADER TABLE
 ========================================================= */
 
-.overall-table th{
-
-    position:sticky;
-
-    top:0;
-
-    z-index:5;
-
-    padding:11px 9px;
-
-    text-align:center;
-
-    font-size:13px;
-
-    font-weight:700;
-
-    color:#334155;
-
-    background:#f8fafc;
-
-    border-bottom:1px solid #e2e8f0;
-
+.overall-table th {
+    padding: 7px 9px;
+    text-align: left;
+    font-size: 13px;
+    font-weight: 700;
+    color: #334155;
+    background: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
 }
 
 
-/*
-   Header nama bisa diklik
-*/
+/* HEADER PIC BUTTON */
 
-.person-header-button{
-
-    width:100%;
-
-    border:0;
-
-    background:transparent;
-
-    color:#334155;
-
-    font:inherit;
-
-    font-weight:700;
-
-    cursor:pointer;
-
-    padding:5px 4px;
-
-    border-radius:6px;
-
-    transition:.15s;
-
+.person-header-button {
+    width: 100%;
+    border: 0;
+    background: transparent;
+    color: #334155;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 4px 2px;
+    text-align: left;
+    border-radius: 5px;
 }
 
-
-.person-header-button:hover{
-
-    background:#e2e8f0;
-
-    color:var(--primary);
-
+.person-header-button:hover {
+    background: #e2e8f0;
+    color: var(--primary);
 }
 
 
@@ -509,154 +299,113 @@ input[type=search]{
    TABLE BODY
 ========================================================= */
 
-.overall-table td{
-
-    padding:7px;
-
-    vertical-align:top;
-
-    border-bottom:1px solid #f0f2f5;
-
+.overall-table td {
+    padding: 4px;
+    vertical-align: top;
+    border-bottom: 1px solid #f0f2f5;
 }
 
-
-.overall-table tr:last-child td{
-
-    border-bottom:0;
-
+.overall-table tr:last-child td {
+    border-bottom: 0;
 }
-
-
-/* garis vertikal sangat lembut */
 
 .overall-table td + td,
-.overall-table th + th{
-
-    border-left:1px solid #f1f3f5;
-
+.overall-table th + th {
+    border-left: 1px solid #f1f3f5;
 }
 
 
 /* =========================================================
-   TASK CARD
+   TASK CELL
 ========================================================= */
 
-.task-cell{
+.task-cell {
+    min-height: 58px;
 
-    min-height:82px;
+    padding: 7px 8px;
 
-    padding:11px 10px;
+    border-radius: 7px;
 
-    border-radius:9px;
+    background: #f8fafc;
 
-    background:#f8fafc;
+    display: flex;
+    flex-direction: column;
 
-    display:flex;
+    justify-content: flex-start;
+    align-items: flex-start;
 
-    flex-direction:column;
+    text-align: left;
 
-    justify-content:center;
+    gap: 4px;
 
-    align-items:center;
+    transition: .15s;
+}
 
-    text-align:center;
-
-    gap:6px;
-
-    transition:.15s;
-
+.task-cell:hover {
+    box-shadow: 0 2px 7px rgba(15,23,42,.08);
 }
 
 
-.task-cell:hover{
+/* TASK SELESAI HIJAU */
 
-    box-shadow:
-        0 2px 8px rgba(15,23,42,.08);
-
-    transform:translateY(-1px);
-
+.task-cell.done-cell {
+    background: var(--green-soft);
 }
 
 
-/*
-   HANYA SELESAI YANG HIJAU
-*/
+/* TASK BELUM */
 
-.task-cell.done-cell{
-
-    background:var(--green-soft);
-
+.task-cell.belum-cell {
+    background: #f8fafc;
 }
 
 
-/* task belum */
+/* TASK PROSES */
 
-.task-cell.belum-cell{
-
-    background:#f8fafc;
-
+.task-cell.proses-cell {
+    background: var(--yellow-soft);
 }
 
 
-/* task proses */
+/* =========================================================
+   TASK TEXT
+========================================================= */
 
-.task-cell.proses-cell{
+.task-text {
+    width: 100%;
 
-    background:#fffaf0;
+    font-size: 12px;
 
+    line-height: 1.35;
+
+    white-space: pre-wrap;
+
+    word-break: break-word;
+
+    text-align: left;
 }
 
-
-.task-text{
-
-    font-size:13px;
-
-    line-height:1.4;
-
-    white-space:pre-wrap;
-
-    word-break:break-word;
-
+.task-deadline {
+    font-size: 10px;
+    color: #64748b;
+    text-align: left;
 }
 
-
-.task-deadline{
-
-    font-size:11px;
-
-    color:#64748b;
-
+.task-status-small {
+    font-size: 9px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 999px;
 }
 
-
-.task-status-small{
-
-    font-size:10px;
-
-    font-weight:700;
-
-    padding:3px 7px;
-
-    border-radius:999px;
-
+.task-status-small.proses {
+    background: #ffedd5;
+    color: #9a3412;
 }
 
-
-.task-status-small.proses{
-
-    background:#ffedd5;
-
-    color:#9a3412;
-
-}
-
-
-.task-status-small.selesai{
-
-    background:#bbf7d0;
-
-    color:#166534;
-
+.task-status-small.selesai {
+    background: #bbf7d0;
+    color: #166534;
 }
 
 
@@ -664,62 +413,37 @@ input[type=search]{
    TASK ACTION
 ========================================================= */
 
-.task-actions{
-
-    display:flex;
-
-    justify-content:center;
-
-    gap:4px;
-
-    flex-wrap:wrap;
-
+.task-actions {
+    display: flex;
+    justify-content: flex-start;
+    gap: 3px;
+    flex-wrap: wrap;
 }
 
+.task-actions button {
+    border: 1px solid #dbe1e8;
+    background: white;
+    color: #475569;
 
-.task-actions button{
+    padding: 3px 6px;
 
-    border:1px solid #dbe1e8;
+    border-radius: 5px;
 
-    background:#fff;
+    font-size: 9px;
 
-    color:#475569;
-
-    padding:4px 7px;
-
-    border-radius:5px;
-
-    font-size:10px;
-
-    cursor:pointer;
-
-    transition:.15s;
-
+    cursor: pointer;
 }
 
-
-.task-actions button:hover{
-
-    background:#f1f5f9;
-
-    color:#111827;
-
+.task-actions button:hover {
+    background: #eef2f7;
 }
 
-
-/* tombol selesai */
-
-.task-actions button.finish-btn{
-
-    color:var(--green);
-
+.task-actions button.finish-btn {
+    color: var(--green);
 }
 
-
-.task-actions button.finish-btn:hover{
-
-    background:var(--green-soft);
-
+.task-actions button.finish-btn:hover {
+    background: var(--green-soft);
 }
 
 
@@ -727,10 +451,8 @@ input[type=search]{
    EMPTY CELL
 ========================================================= */
 
-.empty-cell{
-
-    min-height:82px;
-
+.empty-cell {
+    height: 58px;
 }
 
 
@@ -738,119 +460,68 @@ input[type=search]{
    PERSON VIEW
 ========================================================= */
 
-.person-view{
-
-    background:#fff;
-
-    border:1px solid #e1e5ea;
-
-    border-radius:12px;
-
-    overflow:hidden;
-
-    box-shadow:var(--shadow);
-
+.person-view {
+    background: white;
+    border: 1px solid #e1e5ea;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
 }
 
-
-.person-title{
-
-    padding:16px 18px;
-
-    font-size:18px;
-
-    font-weight:700;
-
-    border-bottom:1px solid var(--line);
-
+.person-title {
+    padding: 14px 16px;
+    font-size: 17px;
+    font-weight: 700;
+    border-bottom: 1px solid var(--line);
 }
 
-
-.person-section-title{
-
-    padding:13px 16px;
-
-    font-size:15px;
-
-    font-weight:700;
-
-    border-bottom:1px solid var(--line);
-
+.person-section-title {
+    padding: 10px 14px;
+    font-size: 14px;
+    font-weight: 700;
+    border-bottom: 1px solid var(--line);
 }
 
-
-.person-section-title.running{
-
-    color:#475569;
-
+.person-section-title.running {
+    color: #475569;
 }
 
-
-.person-section-title.done{
-
-    color:var(--green);
-
+.person-section-title.done {
+    color: var(--green);
 }
 
-
-.person-table{
-
-    width:100%;
-
-    border-collapse:collapse;
-
+.person-table {
+    width: 100%;
+    border-collapse: collapse;
 }
-
 
 .person-table th,
-.person-table td{
-
-    padding:11px 13px;
-
-    border-bottom:1px solid var(--line);
-
-    text-align:left;
-
-    vertical-align:top;
-
+.person-table td {
+    padding: 9px 11px;
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+    vertical-align: top;
 }
 
-
-.person-table th{
-
-    font-size:11px;
-
-    color:var(--muted);
-
-    background:#fafbfc;
-
-    text-transform:uppercase;
-
+.person-table th {
+    font-size: 10px;
+    color: var(--muted);
+    background: #fafbfc;
+    text-transform: uppercase;
 }
 
-
-.person-table tr:last-child td{
-
-    border-bottom:0;
-
+.person-table tr:last-child td {
+    border-bottom: 0;
 }
 
-
-.task-name{
-
-    font-weight:600;
-
-    white-space:pre-wrap;
-
+.task-name {
+    font-weight: 600;
+    white-space: pre-wrap;
 }
 
-
-.muted{
-
-    color:var(--muted);
-
-    font-size:13px;
-
+.muted {
+    color: var(--muted);
+    font-size: 12px;
 }
 
 
@@ -858,84 +529,52 @@ input[type=search]{
    BADGE
 ========================================================= */
 
-.badge{
-
-    display:inline-block;
-
-    border-radius:999px;
-
-    padding:5px 9px;
-
-    font-size:12px;
-
-    font-weight:700;
-
+.badge {
+    display: inline-block;
+    border-radius: 999px;
+    padding: 4px 8px;
+    font-size: 11px;
+    font-weight: 700;
 }
 
-
-.badge.belum{
-
-    background:#f1f5f9;
-
-    color:#475569;
-
+.badge.belum {
+    background: #f1f5f9;
+    color: #475569;
 }
 
-
-.badge.proses{
-
-    background:#fff3cd;
-
-    color:#a16207;
-
+.badge.proses {
+    background: #fff3cd;
+    color: #a16207;
 }
 
-
-.badge.selesai{
-
-    background:var(--green-soft);
-
-    color:var(--green);
-
+.badge.selesai {
+    background: var(--green-soft);
+    color: var(--green);
 }
 
 
 /* =========================================================
-   ACTIONS PERSON VIEW
+   ACTION PERSON
 ========================================================= */
 
-.actions{
-
-    display:flex;
-
-    gap:5px;
-
-    flex-wrap:wrap;
-
+.actions {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
 }
 
-
-.actions button{
-
-    border:0;
-
-    background:#eef2f7;
-
-    color:#334155;
-
-    padding:6px 9px;
-
-    border-radius:6px;
-
-    cursor:pointer;
-
+.actions button {
+    border: 0;
+    background: #eef2f7;
+    color: #334155;
+    padding: 5px 8px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 11px;
 }
 
-
-.actions button:hover{
-
-    background:#dfe5ed;
-
+.actions button:hover {
+    background: #dfe5ed;
 }
 
 
@@ -943,14 +582,10 @@ input[type=search]{
    EMPTY
 ========================================================= */
 
-.empty{
-
-    padding:28px;
-
-    text-align:center;
-
-    color:var(--muted);
-
+.empty {
+    padding: 25px;
+    text-align: center;
+    color: var(--muted);
 }
 
 
@@ -958,102 +593,59 @@ input[type=search]{
    DIALOG
 ========================================================= */
 
-dialog{
-
-    border:0;
-
-    border-radius:14px;
-
-    padding:0;
-
-    width:min(620px,92vw);
-
-    box-shadow:
-        0 20px 70px rgba(0,0,0,.28);
-
+dialog {
+    border: 0;
+    border-radius: 12px;
+    padding: 0;
+    width: min(620px, 92vw);
+    box-shadow: 0 20px 70px rgba(0,0,0,.28);
 }
 
-
-dialog::backdrop{
-
-    background:rgba(0,0,0,.55);
-
+dialog::backdrop {
+    background: rgba(0,0,0,.55);
 }
 
-
-.modal{
-
-    padding:22px;
-
+.modal {
+    padding: 20px;
 }
 
-
-.modal h2{
-
-    margin:0 0 18px;
-
+.modal h2 {
+    margin: 0 0 17px;
 }
 
-
-.form-grid{
-
-    display:grid;
-
-    grid-template-columns:1fr 1fr;
-
-    gap:13px;
-
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
 }
 
-
-.full{
-
-    grid-column:1/-1;
-
+.full {
+    grid-column: 1 / -1;
 }
 
-
-.field label{
-
-    display:block;
-
-    font-size:13px;
-
-    font-weight:700;
-
-    margin-bottom:6px;
-
+.field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 5px;
 }
-
 
 .field input,
 .field select,
-.field textarea{
-
-    width:100%;
-
+.field textarea {
+    width: 100%;
 }
 
-
-.field textarea{
-
-    min-height:100px;
-
-    resize:vertical;
-
+.field textarea {
+    min-height: 90px;
+    resize: vertical;
 }
 
-
-.modal-actions{
-
-    display:flex;
-
-    justify-content:flex-end;
-
-    gap:8px;
-
-    margin-top:18px;
-
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 16px;
 }
 
 
@@ -1061,42 +653,25 @@ dialog::backdrop{
    PEOPLE MANAGER
 ========================================================= */
 
-.people-list{
-
-    display:flex;
-
-    flex-direction:column;
-
-    gap:8px;
-
-    max-height:400px;
-
-    overflow-y:auto;
-
+.people-list {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    max-height: 400px;
+    overflow-y: auto;
 }
 
-
-.people-item{
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    border:1px solid #e2e8f0;
-
-    border-radius:8px;
-
-    padding:10px 12px;
-
+.people-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #e2e8f0;
+    border-radius: 7px;
+    padding: 9px 11px;
 }
 
-
-.people-item-name{
-
-    font-weight:700;
-
+.people-item-name {
+    font-weight: 700;
 }
 
 
@@ -1104,65 +679,40 @@ dialog::backdrop{
    MOBILE
 ========================================================= */
 
-@media(max-width:700px){
+@media(max-width:700px) {
 
-    main{
-
-        padding:10px;
-
+    main {
+        padding: 10px;
     }
 
-
-    .form-grid{
-
-        grid-template-columns:1fr;
-
+    .form-grid {
+        grid-template-columns: 1fr;
     }
 
-
-    .full{
-
-        grid-column:auto;
-
+    .full {
+        grid-column: auto;
     }
 
-
-    input[type=search]{
-
-        min-width:0;
-
-        width:100%;
-
+    input[type="search"] {
+        min-width: 0;
+        width: 100%;
     }
 
-
-    .toolbar-left{
-
-        width:100%;
-
+    .toolbar-left {
+        width: 100%;
     }
 
-
-    .toolbar-left select{
-
-        width:100%;
-
+    .toolbar-left select {
+        width: 100%;
     }
 
-
-    .toolbar .primary{
-
-        width:100%;
-
+    .toolbar .primary {
+        width: 100%;
     }
 
-
-    .overall-table{
-
-        min-width:900px;
-
+    .overall-table {
+        min-width: 900px;
     }
-
 }
 
 </style>
@@ -1173,30 +723,18 @@ dialog::backdrop{
 <body>
 
 
-<!-- =======================================================
-     HEADER
-======================================================= -->
-
 <header>
 
     <div class="brand">
         OUTSTANDING LIST
     </div>
 
-
     <nav id="nav"></nav>
 
 </header>
 
 
-<!-- =======================================================
-     MAIN
-======================================================= -->
-
 <main>
-
-
-    <!-- TOOLBAR -->
 
     <div class="toolbar">
 
@@ -1206,14 +744,9 @@ dialog::backdrop{
                 id="search"
                 type="search"
                 placeholder="🔍 Cari task..."
-                oninput="render()"
             >
 
-
-            <select
-                id="sort"
-                onchange="render()"
-            >
+            <select id="sort">
 
                 <option value="deadline">
                     Deadline terdekat
@@ -1233,8 +766,8 @@ dialog::backdrop{
 
 
         <button
+            id="addTaskButton"
             class="btn primary"
-            onclick="openAdd()"
         >
             + Tambah Task
         </button>
@@ -1255,9 +788,9 @@ dialog::backdrop{
 </main>
 
 
-<!-- =======================================================
-     MODAL TASK
-======================================================= -->
+<!-- =====================================================
+     TASK MODAL
+===================================================== -->
 
 <dialog id="taskDialog">
 
@@ -1267,28 +800,18 @@ dialog::backdrop{
             Tambah Task
         </h2>
 
-
-        <form
-            id="taskForm"
-            onsubmit="saveTask(event)"
-        >
+        <form id="taskForm">
 
             <input
                 type="hidden"
                 id="taskId"
             >
 
-
             <div class="form-grid">
-
-
-                <!-- PIC -->
 
                 <div class="field">
 
-                    <label>
-                        PIC
-                    </label>
+                    <label>PIC</label>
 
                     <select
                         id="pic"
@@ -1298,13 +821,9 @@ dialog::backdrop{
                 </div>
 
 
-                <!-- STATUS -->
-
                 <div class="field">
 
-                    <label>
-                        Status
-                    </label>
+                    <label>Status</label>
 
                     <select
                         id="taskStatus"
@@ -1328,13 +847,9 @@ dialog::backdrop{
                 </div>
 
 
-                <!-- TASK -->
-
                 <div class="field full">
 
-                    <label>
-                        Task
-                    </label>
+                    <label>Task</label>
 
                     <textarea
                         id="task"
@@ -1345,13 +860,9 @@ dialog::backdrop{
                 </div>
 
 
-                <!-- DEADLINE -->
-
                 <div class="field">
 
-                    <label>
-                        Deadline
-                    </label>
+                    <label>Deadline</label>
 
                     <input
                         id="deadline"
@@ -1361,13 +872,9 @@ dialog::backdrop{
                 </div>
 
 
-                <!-- NOTE -->
-
                 <div class="field">
 
-                    <label>
-                        Keterangan
-                    </label>
+                    <label>Keterangan</label>
 
                     <input
                         id="note"
@@ -1384,12 +891,11 @@ dialog::backdrop{
 
                 <button
                     type="button"
+                    id="cancelTaskButton"
                     class="btn secondary"
-                    onclick="closeTaskDialog()"
                 >
                     Batal
                 </button>
-
 
                 <button
                     type="submit"
@@ -1407,9 +913,9 @@ dialog::backdrop{
 </dialog>
 
 
-<!-- =======================================================
-     MODAL TAMBAH ORANG
-======================================================= -->
+<!-- =====================================================
+     ADD PERSON
+===================================================== -->
 
 <dialog id="personDialog">
 
@@ -1419,16 +925,11 @@ dialog::backdrop{
             Tambah Orang
         </h2>
 
-
-        <form
-            onsubmit="addPerson(event)"
-        >
+        <form id="personForm">
 
             <div class="field">
 
-                <label>
-                    Nama
-                </label>
+                <label>Nama</label>
 
                 <input
                     id="personName"
@@ -1445,12 +946,11 @@ dialog::backdrop{
 
                 <button
                     type="button"
+                    id="cancelPersonButton"
                     class="btn secondary"
-                    onclick="closePersonDialog()"
                 >
                     Batal
                 </button>
-
 
                 <button
                     type="submit"
@@ -1468,9 +968,9 @@ dialog::backdrop{
 </dialog>
 
 
-<!-- =======================================================
-     MODAL KELOLA ORANG
-======================================================= -->
+<!-- =====================================================
+     MANAGE PEOPLE
+===================================================== -->
 
 <dialog id="peopleManagerDialog">
 
@@ -1480,19 +980,17 @@ dialog::backdrop{
             Kelola Orang
         </h2>
 
-
         <div
             id="peopleList"
             class="people-list"
         ></div>
 
-
         <div class="modal-actions">
 
             <button
                 type="button"
+                id="closePeopleButton"
                 class="btn secondary"
-                onclick="closePeopleManager()"
             >
                 Tutup
             </button>
@@ -1504,26 +1002,20 @@ dialog::backdrop{
 </dialog>
 
 
-
 <script>
 
 /* =========================================================
-   SUPABASE CONFIG
+   SUPABASE
 ========================================================= */
 
 const SUPABASE_URL =
     "https://zwgstnuevycnyzgcggxy.supabase.co";
 
-
 const SUPABASE_PUBLISHABLE_KEY =
     "sb_publishable_W1-empf5i4JK4T4v7DNwmA_BV9RXUs7";
 
 
-/* =========================================================
-   VARIABLES
-========================================================= */
-
-let supabaseClient = null;
+let supabaseClient;
 
 let people = [];
 
@@ -1536,18 +1028,99 @@ let selectedPIC = "ALL";
    INIT
 ========================================================= */
 
-async function init(){
+async function init() {
 
-    supabaseClient =
-        supabase.createClient(
-            SUPABASE_URL,
-            SUPABASE_PUBLISHABLE_KEY
-        );
+    try {
+
+        supabaseClient =
+            supabase.createClient(
+                SUPABASE_URL,
+                SUPABASE_PUBLISHABLE_KEY
+            );
 
 
-    await loadPeople();
+        await loadPeople();
 
-    await loadTasks();
+        await loadTasks();
+
+
+        /* EVENT BUTTON UTAMA */
+
+        document
+            .getElementById("addTaskButton")
+            .addEventListener(
+                "click",
+                openAdd
+            );
+
+
+        document
+            .getElementById("cancelTaskButton")
+            .addEventListener(
+                "click",
+                closeTaskDialog
+            );
+
+
+        document
+            .getElementById("cancelPersonButton")
+            .addEventListener(
+                "click",
+                closePersonDialog
+            );
+
+
+        document
+            .getElementById("closePeopleButton")
+            .addEventListener(
+                "click",
+                closePeopleManager
+            );
+
+
+        document
+            .getElementById("taskForm")
+            .addEventListener(
+                "submit",
+                saveTask
+            );
+
+
+        document
+            .getElementById("personForm")
+            .addEventListener(
+                "submit",
+                addPerson
+            );
+
+
+        document
+            .getElementById("search")
+            .addEventListener(
+                "input",
+                render
+            );
+
+
+        document
+            .getElementById("sort")
+            .addEventListener(
+                "change",
+                render
+            );
+
+    } catch(error) {
+
+        console.error(error);
+
+        document
+            .getElementById("statusbar")
+            .innerHTML =
+                `<span class="error">
+                    Gagal menjalankan aplikasi.
+                </span>`;
+
+    }
 
 }
 
@@ -1556,20 +1129,20 @@ async function init(){
    ESCAPE
 ========================================================= */
 
-function esc(value){
+function esc(value) {
 
     return String(value ?? "")
         .replace(
             /[&<>"']/g,
-            function(m){
+            function(m) {
 
                 return {
 
-                    "&":"&amp;",
-                    "<":"&lt;",
-                    ">":"&gt;",
-                    '"':"&quot;",
-                    "'":"&#039;"
+                    "&": "&amp;",
+                    "<": "&lt;",
+                    ">": "&gt;",
+                    '"': "&quot;",
+                    "'": "&#039;"
 
                 }[m];
 
@@ -1580,32 +1153,22 @@ function esc(value){
 
 
 /* =========================================================
-   FORMAT DATE
+   DATE
 ========================================================= */
 
-function formatDate(value){
+function formatDate(value) {
 
-    if(!value){
-
+    if (!value) {
         return "-";
-
     }
 
+    const parts = value.split("-");
 
-    const parts =
-        value.split("-");
-
-
-    if(parts.length !== 3){
-
+    if (parts.length !== 3) {
         return value;
-
     }
 
-
-    return `
-        ${parts[2]}/${parts[1]}/${parts[0]}
-    `;
+    return `${parts[2]}/${parts[1]}/${parts[0]}`;
 
 }
 
@@ -1614,7 +1177,7 @@ function formatDate(value){
    LOAD PEOPLE
 ========================================================= */
 
-async function loadPeople(){
+async function loadPeople() {
 
     const {
         data,
@@ -1626,21 +1189,21 @@ async function loadPeople(){
             .order(
                 "name",
                 {
-                    ascending:true
+                    ascending: true
                 }
             );
 
 
-    if(error){
+    if (error) {
 
-        document.getElementById(
-            "statusbar"
-        ).innerHTML =
+        console.error(error);
 
-            '<span class="error">'
-            + 'Gagal membaca data orang:'
-            + '</span> '
-            + esc(error.message);
+        document
+            .getElementById("statusbar")
+            .innerHTML =
+                `<span class="error">
+                    Gagal membaca data orang:
+                </span> ${esc(error.message)}`;
 
         return;
 
@@ -1661,7 +1224,7 @@ async function loadPeople(){
    LOAD TASKS
 ========================================================= */
 
-async function loadTasks(){
+async function loadTasks() {
 
     const {
         data,
@@ -1673,22 +1236,22 @@ async function loadTasks(){
             .order(
                 "deadline",
                 {
-                    ascending:true,
-                    nullsFirst:false
+                    ascending: true,
+                    nullsFirst: false
                 }
             );
 
 
-    if(error){
+    if (error) {
 
-        document.getElementById(
-            "statusbar"
-        ).innerHTML =
+        console.error(error);
 
-            '<span class="error">'
-            + 'Gagal membaca task:'
-            + '</span> '
-            + esc(error.message);
+        document
+            .getElementById("statusbar")
+            .innerHTML =
+                `<span class="error">
+                    Gagal membaca task:
+                </span> ${esc(error.message)}`;
 
         return;
 
@@ -1698,14 +1261,7 @@ async function loadTasks(){
     tasks = data || [];
 
 
-    document.getElementById(
-        "statusbar"
-    ).textContent =
-
-        `Terhubung ke Supabase • `
-        + `${tasks.length} task • `
-        + `${people.length} orang`;
-
+    updateStatusbar();
 
     render();
 
@@ -1713,94 +1269,163 @@ async function loadTasks(){
 
 
 /* =========================================================
-   NAVIGATION
+   STATUS BAR
 ========================================================= */
 
-function renderNav(){
+function updateStatusbar() {
+
+    document
+        .getElementById("statusbar")
+        .textContent =
+            `Terhubung ke Supabase • `
+            + `${tasks.length} task • `
+            + `${people.length} orang`;
+
+}
+
+
+/* =========================================================
+   NAVBAR
+   TIDAK PAKAI ONCLICK HTML
+========================================================= */
+
+function renderNav() {
 
     const nav =
         document.getElementById("nav");
 
 
-    let html = "";
+    nav.innerHTML = "";
 
 
     /* OVERALL */
 
-    html += `
+    const overallButton =
+        document.createElement("button");
 
-        <button
-            class="${selectedPIC === "ALL" ? "active" : ""}"
-            onclick="selectPIC('ALL')"
-        >
-            Overall
-        </button>
+    overallButton.textContent =
+        "Overall";
 
-    `;
+    overallButton.className =
+        selectedPIC === "ALL"
+            ? "active"
+            : "";
+
+
+    overallButton.addEventListener(
+        "click",
+        function() {
+
+            selectedPIC = "ALL";
+
+            renderNav();
+
+            render();
+
+        }
+    );
+
+
+    nav.appendChild(
+        overallButton
+    );
 
 
     /* PEOPLE */
 
-    people.forEach(person => {
+    people.forEach(
+        function(person) {
 
-        html += `
-
-            <button
-                class="${selectedPIC === person.name ? "active" : ""}"
-                onclick="selectPIC(${JSON.stringify(person.name)})"
-            >
-                ${esc(person.name)}
-            </button>
-
-        `;
-
-    });
+            const button =
+                document.createElement("button");
 
 
-    /* ADD PERSON */
-
-    html += `
-
-        <button
-            class="add-person"
-            onclick="openPersonDialog()"
-        >
-            + Orang
-        </button>
-
-    `;
+            button.textContent =
+                person.name;
 
 
-    /* MANAGE */
+            if(
+                selectedPIC
+                ===
+                person.name
+            ) {
 
-    html += `
+                button.classList.add(
+                    "active"
+                );
 
-        <button
-            class="manage-person"
-            onclick="openPeopleManager()"
-        >
-            ⚙ Kelola
-        </button>
-
-    `;
-
-
-    nav.innerHTML = html;
-
-}
+            }
 
 
-/* =========================================================
-   SELECT PERSON
-========================================================= */
+            button.addEventListener(
+                "click",
+                function() {
 
-function selectPIC(pic){
+                    selectedPIC =
+                        person.name;
 
-    selectedPIC = pic;
+                    renderNav();
 
-    renderNav();
+                    render();
 
-    render();
+                }
+            );
+
+
+            nav.appendChild(
+                button
+            );
+
+        }
+    );
+
+
+    /* TAMBAH ORANG */
+
+    const addPersonButton =
+        document.createElement("button");
+
+
+    addPersonButton.textContent =
+        "+ Orang";
+
+    addPersonButton.className =
+        "add-person";
+
+
+    addPersonButton.addEventListener(
+        "click",
+        openPersonDialog
+    );
+
+
+    nav.appendChild(
+        addPersonButton
+    );
+
+
+    /* KELOLA */
+
+    const manageButton =
+        document.createElement("button");
+
+
+    manageButton.textContent =
+        "⚙ Kelola";
+
+    manageButton.className =
+        "manage-person";
+
+
+    manageButton.addEventListener(
+        "click",
+        openPeopleManager
+    );
+
+
+    nav.appendChild(
+        manageButton
+    );
 
 }
 
@@ -1809,40 +1434,37 @@ function selectPIC(pic){
    FILTER
 ========================================================= */
 
-function filteredTasks(){
-
-    const search =
-        document.getElementById("search");
-
+function filteredTasks() {
 
     const query =
-        search
-            ? search.value.trim().toLowerCase()
-            : "";
+        document
+            .getElementById("search")
+            .value
+            .trim()
+            .toLowerCase();
 
 
     let list =
-        tasks.filter(task => {
+        tasks.filter(
+            function(task) {
 
-            if(
-                selectedPIC !== "ALL" &&
-                task.pic !== selectedPIC
-            ){
+                if(
+                    selectedPIC !== "ALL"
+                    &&
+                    task.pic !== selectedPIC
+                ) {
 
-                return false;
+                    return false;
 
-            }
-
-
-            return true;
-
-        });
+                }
 
 
-    if(query){
+                if(!query) {
 
-        list =
-            list.filter(task => {
+                    return true;
+
+                }
+
 
                 return [
 
@@ -1853,51 +1475,52 @@ function filteredTasks(){
                     task.deadline
 
                 ]
-                .join(" ")
-                .toLowerCase()
-                .includes(query);
+                    .join(" ")
+                    .toLowerCase()
+                    .includes(query);
 
-            });
-
-    }
+            }
+        );
 
 
     const sort =
-        document.getElementById("sort")
-            ?.value || "deadline";
+        document
+            .getElementById("sort")
+            .value;
 
 
-    list.sort((a,b) => {
+    list.sort(
+        function(a,b) {
 
-        if(sort === "newest"){
+            if(sort === "newest") {
 
-            return new Date(b.created_at)
-                -
-                new Date(a.created_at);
+                return new Date(b.created_at)
+                    -
+                    new Date(a.created_at);
+
+            }
+
+
+            if(sort === "oldest") {
+
+                return new Date(a.created_at)
+                    -
+                    new Date(b.created_at);
+
+            }
+
+
+            const ad =
+                a.deadline || "9999-12-31";
+
+            const bd =
+                b.deadline || "9999-12-31";
+
+
+            return ad.localeCompare(bd);
 
         }
-
-
-        if(sort === "oldest"){
-
-            return new Date(a.created_at)
-                -
-                new Date(b.created_at);
-
-        }
-
-
-        const ad =
-            a.deadline || "9999-12-31";
-
-
-        const bd =
-            b.deadline || "9999-12-31";
-
-
-        return ad.localeCompare(bd);
-
-    });
+    );
 
 
     return list;
@@ -1906,21 +1529,23 @@ function filteredTasks(){
 
 
 /* =========================================================
-   MAIN RENDER
+   RENDER
 ========================================================= */
 
-function render(){
+function render() {
 
     const app =
         document.getElementById("app");
 
 
-    if(selectedPIC === "ALL"){
+    if(selectedPIC === "ALL") {
 
         app.innerHTML =
             renderOverall();
 
-    }else{
+        attachOverallHeaderButtons();
+
+    } else {
 
         app.innerHTML =
             renderPersonView(
@@ -1936,7 +1561,7 @@ function render(){
    OVERALL
 ========================================================= */
 
-function renderOverall(){
+function renderOverall() {
 
     const list =
         filteredTasks();
@@ -1964,7 +1589,6 @@ function renderOverall(){
             false
         )}
 
-
         ${renderOverallTable(
             "SELESAI",
             completed,
@@ -1984,9 +1608,9 @@ function renderOverallTable(
     title,
     list,
     isDone
-){
+) {
 
-    if(!people.length){
+    if(!people.length) {
 
         return `
 
@@ -1995,28 +1619,21 @@ function renderOverallTable(
                 <div class="overall-heading">
 
                     <div
-                        class="overall-heading-title
-                        ${isDone ? "done" : "running"}"
+                        class="
+                            overall-heading-title
+                            ${isDone ? "done" : "running"}
+                        "
                     >
-
                         ${title}
-
                     </div>
 
                 </div>
-
 
                 <div class="overall-wrapper">
 
                     <div class="empty">
 
                         Belum ada orang.
-
-                        <br><br>
-
-                        Klik
-                        <b>+ Orang</b>
-                        untuk menambahkan PIC.
 
                     </div>
 
@@ -2029,66 +1646,54 @@ function renderOverallTable(
     }
 
 
-    /* =====================================================
-       GROUP TASK BY PERSON
-    ===================================================== */
-
     const grouped = {};
 
 
-    people.forEach(person => {
+    people.forEach(
+        function(person) {
 
-        grouped[person.name] = [];
-
-    });
-
-
-    list.forEach(task => {
-
-        if(!grouped[task.pic]){
-
-            grouped[task.pic] = [];
+            grouped[person.name] = [];
 
         }
+    );
 
 
-        grouped[task.pic].push(task);
+    list.forEach(
+        function(task) {
 
-    });
+            if(!grouped[task.pic]) {
 
+                grouped[task.pic] = [];
 
-    /* =====================================================
-       MAX ROW
-    ===================================================== */
+            }
+
+            grouped[task.pic].push(task);
+
+        }
+    );
+
 
     let maxRows = 0;
 
 
-    people.forEach(person => {
+    people.forEach(
+        function(person) {
 
-        const count =
-            grouped[person.name]?.length || 0;
+            const count =
+                grouped[person.name].length;
 
-
-        if(count > maxRows){
-
-            maxRows = count;
+            if(count > maxRows) {
+                maxRows = count;
+            }
 
         }
+    );
 
-    });
 
-
-    if(maxRows === 0){
-
+    if(maxRows === 0) {
         maxRows = 1;
-
     }
 
-
-    /* =====================================================
-       HEADER
-    ===================================================== */
 
     let html = `
 
@@ -2102,16 +1707,11 @@ function renderOverallTable(
                         ${isDone ? "done" : "running"}
                     "
                 >
-
                     ${title}
-
                 </div>
 
-
                 <div class="overall-count">
-
                     ${list.length} task
-
                 </div>
 
             </div>
@@ -2128,27 +1728,26 @@ function renderOverallTable(
     `;
 
 
-    people.forEach(person => {
+    people.forEach(
+        function(person) {
 
-        html += `
+            html += `
 
-            <th>
+                <th>
 
-                <button
-                    class="person-header-button"
-                    onclick="selectPIC(${JSON.stringify(person.name)})"
-                    title="Lihat task ${esc(person.name)}"
-                >
+                    <button
+                        class="person-header-button"
+                        data-person="${esc(person.name)}"
+                    >
+                        ${esc(person.name)}
+                    </button>
 
-                    ${esc(person.name)}
+                </th>
 
-                </button>
+            `;
 
-            </th>
-
-        `;
-
-    });
+        }
+    );
 
 
     html += `
@@ -2157,215 +1756,204 @@ function renderOverallTable(
 
                     </thead>
 
-
                     <tbody>
 
     `;
 
 
-    /* =====================================================
-       ROWS
-    ===================================================== */
-
     for(
         let row = 0;
         row < maxRows;
         row++
-    ){
+    ) {
 
         html += "<tr>";
 
 
-        people.forEach(person => {
+        people.forEach(
+            function(person) {
 
-            const personTasks =
-                grouped[person.name] || [];
-
-
-            const task =
-                personTasks[row];
+                const personTasks =
+                    grouped[person.name];
 
 
-            if(task){
-
-                let cellClass =
-                    "belum-cell";
+                const task =
+                    personTasks[row];
 
 
-                if(task.status === "Proses"){
+                if(task) {
 
-                    cellClass =
-                        "proses-cell";
-
-                }
+                    let cellClass =
+                        "belum-cell";
 
 
-                if(task.status === "Selesai"){
+                    if(
+                        task.status === "Proses"
+                    ) {
 
-                    cellClass =
-                        "done-cell";
+                        cellClass =
+                            "proses-cell";
 
-                }
-
-
-                html += `
-
-                    <td>
-
-                        <div
-                            class="
-                                task-cell
-                                ${cellClass}
-                            "
-                        >
-
-                            <div class="task-text">
-
-                                ${esc(task.task)}
-
-                            </div>
+                    }
 
 
-                            ${
-                                task.deadline
-                                ?
-                                `
+                    if(
+                        task.status === "Selesai"
+                    ) {
 
-                                <div
-                                    class="task-deadline"
-                                >
+                        cellClass =
+                            "done-cell";
 
-                                    Deadline:
-                                    ${formatDate(task.deadline)}
+                    }
+
+
+                    html += `
+
+                        <td>
+
+                            <div
+                                class="
+                                    task-cell
+                                    ${cellClass}
+                                "
+                            >
+
+                                <div class="task-text">
+
+                                    ${esc(task.task)}
 
                                 </div>
 
-                                `
-                                :
-                                ""
-                            }
-
-
-                            ${
-                                task.status === "Proses"
-                                ?
-                                `
-
-                                <span
-                                    class="
-                                        task-status-small
-                                        proses
-                                    "
-                                >
-                                    Proses
-                                </span>
-
-                                `
-                                :
-                                ""
-                            }
-
-
-                            ${
-                                task.status === "Selesai"
-                                ?
-                                `
-
-                                <span
-                                    class="
-                                        task-status-small
-                                        selesai
-                                    "
-                                >
-                                    ✓ Selesai
-                                </span>
-
-                                `
-                                :
-                                ""
-                            }
-
-
-                            <div
-                                class="task-actions"
-                            >
-
-
-                                <!-- EDIT -->
-
-                                <button
-                                    onclick="openEdit('${task.id}')"
-                                >
-                                    Edit
-                                </button>
-
-
-                                <!-- STATUS -->
 
                                 ${
-                                    task.status === "Selesai"
-
+                                    task.deadline
                                     ?
-
                                     `
-
-                                    <button
-                                        onclick="quickStatus('${task.id}','Proses')"
+                                    <div
+                                        class="task-deadline"
                                     >
-                                        Buka
-                                    </button>
-
+                                        Deadline:
+                                        ${formatDate(
+                                            task.deadline
+                                        )}
+                                    </div>
                                     `
-
                                     :
-
-                                    `
-
-                                    <button
-                                        class="finish-btn"
-                                        onclick="quickStatus('${task.id}','Selesai')"
-                                    >
-                                        ✓
-                                    </button>
-
-                                    `
+                                    ""
                                 }
 
 
-                                <!-- DELETE -->
+                                ${
+                                    task.status === "Proses"
+                                    ?
+                                    `
+                                    <span
+                                        class="
+                                            task-status-small
+                                            proses
+                                        "
+                                    >
+                                        Proses
+                                    </span>
+                                    `
+                                    :
+                                    ""
+                                }
 
-                                <button
-                                    onclick="deleteTask('${task.id}')"
+
+                                ${
+                                    task.status === "Selesai"
+                                    ?
+                                    `
+                                    <span
+                                        class="
+                                            task-status-small
+                                            selesai
+                                        "
+                                    >
+                                        ✓ Selesai
+                                    </span>
+                                    `
+                                    :
+                                    ""
+                                }
+
+
+                                <div
+                                    class="task-actions"
                                 >
-                                    ×
-                                </button>
 
+                                    <button
+                                        data-action="edit"
+                                        data-id="${task.id}"
+                                    >
+                                        Edit
+                                    </button>
+
+
+                                    ${
+                                        task.status === "Selesai"
+
+                                        ?
+
+                                        `
+                                        <button
+                                            data-action="status"
+                                            data-id="${task.id}"
+                                            data-status="Proses"
+                                        >
+                                            Buka
+                                        </button>
+                                        `
+
+                                        :
+
+                                        `
+                                        <button
+                                            class="finish-btn"
+                                            data-action="status"
+                                            data-id="${task.id}"
+                                            data-status="Selesai"
+                                        >
+                                            ✓
+                                        </button>
+                                        `
+                                    }
+
+
+                                    <button
+                                        data-action="delete"
+                                        data-id="${task.id}"
+                                    >
+                                        ×
+                                    </button>
+
+                                </div>
 
                             </div>
 
-                        </div>
+                        </td>
 
-                    </td>
+                    `;
 
-                `;
+                } else {
 
-            }else{
+                    html += `
 
-                html += `
+                        <td>
 
-                    <td>
+                            <div
+                                class="empty-cell"
+                            ></div>
 
-                        <div
-                            class="empty-cell"
-                        ></div>
+                        </td>
 
-                    </td>
+                    `;
 
-                `;
+                }
 
             }
-
-        });
+        );
 
 
         html += "</tr>";
@@ -2392,10 +1980,98 @@ function renderOverallTable(
 
 
 /* =========================================================
+   HEADER BUTTON OVERALL
+========================================================= */
+
+function attachOverallHeaderButtons() {
+
+    document
+        .querySelectorAll(
+            ".person-header-button"
+        )
+        .forEach(
+            function(button) {
+
+                button.addEventListener(
+                    "click",
+                    function() {
+
+                        const name =
+                            this.dataset.person;
+
+
+                        selectedPIC =
+                            name;
+
+
+                        renderNav();
+
+                        render();
+
+                    }
+                );
+
+            }
+        );
+
+
+    /* ACTION BUTTON TASK */
+
+    document
+        .querySelectorAll(
+            ".task-actions button"
+        )
+        .forEach(
+            function(button) {
+
+                button.addEventListener(
+                    "click",
+                    async function() {
+
+                        const action =
+                            this.dataset.action;
+
+                        const id =
+                            this.dataset.id;
+
+
+                        if(action === "edit") {
+
+                            openEdit(id);
+
+                        }
+
+
+                        if(action === "delete") {
+
+                            await deleteTask(id);
+
+                        }
+
+
+                        if(action === "status") {
+
+                            await quickStatus(
+                                id,
+                                this.dataset.status
+                            );
+
+                        }
+
+                    }
+                );
+
+            }
+        );
+
+}
+
+
+/* =========================================================
    PERSON VIEW
 ========================================================= */
 
-function renderPersonView(name){
+function renderPersonView(name) {
 
     const list =
         filteredTasks().filter(
@@ -2422,21 +2098,16 @@ function renderPersonView(name){
 
         <div class="person-view">
 
-
             <div class="person-title">
 
                 ${esc(name)}
 
                 <span class="muted">
-
                     • ${list.length} task
-
                 </span>
 
             </div>
 
-
-            <!-- RUNNING -->
 
             <div
                 class="
@@ -2444,25 +2115,15 @@ function renderPersonView(name){
                     running
                 "
             >
-
                 OUTSTANDING
-
                 <span class="muted">
                     (${running.length})
                 </span>
-
             </div>
 
 
-            ${
-                renderPersonTable(
-                    running,
-                    false
-                )
-            }
+            ${renderPersonTable(running)}
 
-
-            <!-- DONE -->
 
             <div
                 class="
@@ -2470,23 +2131,14 @@ function renderPersonView(name){
                     done
                 "
             >
-
                 SELESAI
-
                 <span class="muted">
                     (${done.length})
                 </span>
-
             </div>
 
 
-            ${
-                renderPersonTable(
-                    done,
-                    true
-                )
-            }
-
+            ${renderPersonTable(done)}
 
         </div>
 
@@ -2499,19 +2151,14 @@ function renderPersonView(name){
    PERSON TABLE
 ========================================================= */
 
-function renderPersonTable(
-    list,
-    isDone
-){
+function renderPersonTable(list) {
 
-    if(!list.length){
+    if(!list.length) {
 
         return `
 
             <div class="empty">
-
                 Tidak ada task.
-
             </div>
 
         `;
@@ -2528,32 +2175,26 @@ function renderPersonTable(
                 <tr>
 
                     <th>Task</th>
-
                     <th>Deadline</th>
-
                     <th>Status</th>
-
                     <th>Keterangan</th>
-
                     <th>Aksi</th>
 
                 </tr>
 
             </thead>
 
-
             <tbody>
 
     `;
 
 
-    html +=
-        list.map(task => {
+    list.forEach(
+        function(task) {
 
-            return `
+            html += `
 
                 <tr>
-
 
                     <td>
 
@@ -2597,9 +2238,9 @@ function renderPersonTable(
 
                         <div class="actions">
 
-
                             <button
-                                onclick="openEdit('${task.id}')"
+                                data-action="edit"
+                                data-id="${task.id}"
                             >
                                 Edit
                             </button>
@@ -2611,46 +2252,46 @@ function renderPersonTable(
                                 ?
 
                                 `
-
                                 <button
-                                    onclick="quickStatus('${task.id}','Proses')"
+                                    data-action="status"
+                                    data-id="${task.id}"
+                                    data-status="Proses"
                                 >
                                     Buka
                                 </button>
-
                                 `
 
                                 :
 
                                 `
-
                                 <button
-                                    onclick="quickStatus('${task.id}','Selesai')"
+                                    data-action="status"
+                                    data-id="${task.id}"
+                                    data-status="Selesai"
                                 >
                                     Selesai
                                 </button>
-
                                 `
                             }
 
 
                             <button
-                                onclick="deleteTask('${task.id}')"
+                                data-action="delete"
+                                data-id="${task.id}"
                             >
                                 Hapus
                             </button>
-
 
                         </div>
 
                     </td>
 
-
                 </tr>
 
             `;
 
-        }).join("");
+        }
+    );
 
 
     html += `
@@ -2662,7 +2303,69 @@ function renderPersonTable(
     `;
 
 
+    setTimeout(
+        attachPersonActionButtons,
+        0
+    );
+
+
     return html;
+
+}
+
+
+/* =========================================================
+   PERSON ACTION BUTTON
+========================================================= */
+
+function attachPersonActionButtons() {
+
+    document
+        .querySelectorAll(
+            ".person-table button"
+        )
+        .forEach(
+            function(button) {
+
+                button.addEventListener(
+                    "click",
+                    async function() {
+
+                        const action =
+                            this.dataset.action;
+
+                        const id =
+                            this.dataset.id;
+
+
+                        if(action === "edit") {
+
+                            openEdit(id);
+
+                        }
+
+
+                        if(action === "delete") {
+
+                            await deleteTask(id);
+
+                        }
+
+
+                        if(action === "status") {
+
+                            await quickStatus(
+                                id,
+                                this.dataset.status
+                            );
+
+                        }
+
+                    }
+                );
+
+            }
+        );
 
 }
 
@@ -2671,36 +2374,25 @@ function renderPersonTable(
    STATUS BADGE
 ========================================================= */
 
-function statusBadge(status){
+function statusBadge(status) {
 
-    let className =
-        "belum";
+    let className = "belum";
 
 
-    if(status === "Proses"){
-
-        className =
-            "proses";
-
+    if(status === "Proses") {
+        className = "proses";
     }
 
 
-    if(status === "Selesai"){
-
-        className =
-            "selesai";
-
+    if(status === "Selesai") {
+        className = "selesai";
     }
 
 
     return `
 
-        <span
-            class="badge ${className}"
-        >
-
+        <span class="badge ${className}">
             ${esc(status)}
-
         </span>
 
     `;
@@ -2712,35 +2404,41 @@ function statusBadge(status){
    PIC SELECT
 ========================================================= */
 
-function fillPICSelect(){
+function fillPICSelect() {
 
     const select =
         document.getElementById("pic");
 
 
-    if(!select){
-
+    if(!select) {
         return;
-
     }
 
 
-    select.innerHTML =
-        people.map(person => {
+    select.innerHTML = "";
 
-            return `
 
-                <option
-                    value="${esc(person.name)}"
-                >
+    people.forEach(
+        function(person) {
 
-                    ${esc(person.name)}
+            const option =
+                document.createElement("option");
 
-                </option>
 
-            `;
+            option.value =
+                person.name;
 
-        }).join("");
+
+            option.textContent =
+                person.name;
+
+
+            select.appendChild(
+                option
+            );
+
+        }
+    );
 
 }
 
@@ -2749,9 +2447,9 @@ function fillPICSelect(){
    ADD TASK
 ========================================================= */
 
-function openAdd(){
+function openAdd() {
 
-    if(!people.length){
+    if(!people.length) {
 
         alert(
             "Tambahkan orang terlebih dahulu."
@@ -2762,61 +2460,60 @@ function openAdd(){
     }
 
 
-    document.getElementById(
-        "modalTitle"
-    ).textContent =
-        "Tambah Task";
+    document
+        .getElementById("modalTitle")
+        .textContent =
+            "Tambah Task";
 
 
-    document.getElementById(
-        "taskId"
-    ).value = "";
+    document
+        .getElementById("taskForm")
+        .reset();
 
 
-    document.getElementById(
-        "taskForm"
-    ).reset();
+    document
+        .getElementById("taskId")
+        .value = "";
 
 
     fillPICSelect();
 
 
-    const picSelect =
-        document.getElementById("pic");
-
-
     if(
-        selectedPIC !== "ALL" &&
+        selectedPIC !== "ALL"
+        &&
         people.some(
             person =>
                 person.name === selectedPIC
         )
-    ){
+    ) {
 
-        picSelect.value =
-            selectedPIC;
+        document
+            .getElementById("pic")
+            .value =
+                selectedPIC;
 
     }
 
 
-    document.getElementById(
-        "taskStatus"
-    ).value =
-        "Belum";
+    document
+        .getElementById("taskStatus")
+        .value =
+            "Belum";
 
 
-    document.getElementById(
-        "taskDialog"
-    ).showModal();
+    document
+        .getElementById("taskDialog")
+        .showModal();
 
 }
 
 
 /* =========================================================
-   EDIT TASK
+   EDIT
 ========================================================= */
 
-function openEdit(id){
+function openEdit(id) {
 
     const task =
         tasks.find(
@@ -2827,61 +2524,59 @@ function openEdit(id){
         );
 
 
-    if(!task){
-
+    if(!task) {
         return;
-
     }
 
 
-    document.getElementById(
-        "modalTitle"
-    ).textContent =
-        "Edit Task";
+    document
+        .getElementById("modalTitle")
+        .textContent =
+            "Edit Task";
 
 
-    document.getElementById(
-        "taskId"
-    ).value =
-        task.id;
+    document
+        .getElementById("taskId")
+        .value =
+            task.id;
 
 
     fillPICSelect();
 
 
-    document.getElementById(
-        "pic"
-    ).value =
-        task.pic;
+    document
+        .getElementById("pic")
+        .value =
+            task.pic;
 
 
-    document.getElementById(
-        "task"
-    ).value =
-        task.task;
+    document
+        .getElementById("task")
+        .value =
+            task.task;
 
 
-    document.getElementById(
-        "taskStatus"
-    ).value =
-        task.status;
+    document
+        .getElementById("taskStatus")
+        .value =
+            task.status;
 
 
-    document.getElementById(
-        "deadline"
-    ).value =
-        task.deadline || "";
+    document
+        .getElementById("deadline")
+        .value =
+            task.deadline || "";
 
 
-    document.getElementById(
-        "note"
-    ).value =
-        task.note || "";
+    document
+        .getElementById("note")
+        .value =
+            task.note || "";
 
 
-    document.getElementById(
-        "taskDialog"
-    ).showModal();
+    document
+        .getElementById("taskDialog")
+        .showModal();
 
 }
 
@@ -2890,47 +2585,49 @@ function openEdit(id){
    SAVE TASK
 ========================================================= */
 
-async function saveTask(event){
+async function saveTask(event) {
 
     event.preventDefault();
 
 
     const id =
-        document.getElementById(
-            "taskId"
-        ).value;
+        document
+            .getElementById("taskId")
+            .value;
 
 
     const payload = {
 
         pic:
-            document.getElementById(
-                "pic"
-            ).value,
+            document
+                .getElementById("pic")
+                .value,
 
         task:
-            document.getElementById(
-                "task"
-            ).value.trim(),
+            document
+                .getElementById("task")
+                .value
+                .trim(),
 
         status:
-            document.getElementById(
-                "taskStatus"
-            ).value,
+            document
+                .getElementById("taskStatus")
+                .value,
 
         deadline:
-            document.getElementById(
-                "deadline"
-            ).value
-            ||
-            null,
+            document
+                .getElementById("deadline")
+                .value
+                ||
+                null,
 
         note:
-            document.getElementById(
-                "note"
-            ).value.trim()
-            ||
-            null
+            document
+                .getElementById("note")
+                .value
+                .trim()
+                ||
+                null
 
     };
 
@@ -2938,15 +2635,15 @@ async function saveTask(event){
     let result;
 
 
-    if(id){
+    if(id) {
 
         result =
             await supabaseClient
                 .from("tasks")
                 .update(payload)
-                .eq("id",id);
+                .eq("id", id);
 
-    }else{
+    } else {
 
         result =
             await supabaseClient
@@ -2956,7 +2653,7 @@ async function saveTask(event){
     }
 
 
-    if(result.error){
+    if(result.error) {
 
         alert(
             "Gagal menyimpan task:\n\n"
@@ -2971,7 +2668,6 @@ async function saveTask(event){
 
     closeTaskDialog();
 
-
     await loadTasks();
 
 }
@@ -2984,7 +2680,7 @@ async function saveTask(event){
 async function quickStatus(
     id,
     status
-){
+) {
 
     const {
         error
@@ -2992,12 +2688,12 @@ async function quickStatus(
         await supabaseClient
             .from("tasks")
             .update({
-                status:status
+                status: status
             })
-            .eq("id",id);
+            .eq("id", id);
 
 
-    if(error){
+    if(error) {
 
         alert(
             "Gagal mengubah status:\n\n"
@@ -3019,7 +2715,7 @@ async function quickStatus(
    DELETE TASK
 ========================================================= */
 
-async function deleteTask(id){
+async function deleteTask(id) {
 
     const task =
         tasks.find(
@@ -3030,23 +2726,17 @@ async function deleteTask(id){
         );
 
 
-    if(!task){
-
+    if(!task) {
         return;
-
     }
 
 
-    const confirmed =
-        confirm(
+    if(
+        !confirm(
             `Hapus task berikut?\n\n${task.task}`
-        );
-
-
-    if(!confirmed){
-
+        )
+    ) {
         return;
-
     }
 
 
@@ -3056,10 +2746,10 @@ async function deleteTask(id){
         await supabaseClient
             .from("tasks")
             .delete()
-            .eq("id",id);
+            .eq("id", id);
 
 
-    if(error){
+    if(error) {
 
         alert(
             "Gagal menghapus task:\n\n"
@@ -3078,27 +2768,27 @@ async function deleteTask(id){
 
 
 /* =========================================================
-   ADD PERSON
+   PERSON MODAL
 ========================================================= */
 
-function openPersonDialog(){
+function openPersonDialog() {
 
-    document.getElementById(
-        "personName"
-    ).value = "";
+    document
+        .getElementById("personName")
+        .value = "";
 
 
-    document.getElementById(
-        "personDialog"
-    ).showModal();
+    document
+        .getElementById("personDialog")
+        .showModal();
 
 
     setTimeout(
-        () => {
+        function() {
 
-            document.getElementById(
-                "personName"
-            ).focus();
+            document
+                .getElementById("personName")
+                .focus();
 
         },
         100
@@ -3107,38 +2797,35 @@ function openPersonDialog(){
 }
 
 
-function closePersonDialog(){
+function closePersonDialog() {
 
-    document.getElementById(
-        "personDialog"
-    ).close();
+    document
+        .getElementById("personDialog")
+        .close();
 
 }
 
 
 /* =========================================================
-   SAVE PERSON
+   ADD PERSON
 ========================================================= */
 
-async function addPerson(event){
+async function addPerson(event) {
 
     event.preventDefault();
 
 
     const input =
-        document.getElementById(
-            "personName"
-        );
+        document
+            .getElementById("personName");
 
 
     const name =
         input.value.trim();
 
 
-    if(!name){
-
+    if(!name) {
         return;
-
     }
 
 
@@ -3151,7 +2838,7 @@ async function addPerson(event){
         );
 
 
-    if(exists){
+    if(exists) {
 
         alert(
             "Nama tersebut sudah ada."
@@ -3168,11 +2855,11 @@ async function addPerson(event){
         await supabaseClient
             .from("people")
             .insert({
-                name:name
+                name: name
             });
 
 
-    if(error){
+    if(error) {
 
         alert(
             "Gagal menambahkan orang:\n\n"
@@ -3199,16 +2886,7 @@ async function addPerson(event){
 
     render();
 
-
-    document.getElementById(
-        "statusbar"
-    ).textContent =
-
-        `Terhubung ke Supabase • `
-        +
-        `${tasks.length} task • `
-        +
-        `${people.length} orang`;
+    updateStatusbar();
 
 }
 
@@ -3217,40 +2895,43 @@ async function addPerson(event){
    PEOPLE MANAGER
 ========================================================= */
 
-function openPeopleManager(){
+function openPeopleManager() {
 
     renderPeopleManager();
 
 
-    document.getElementById(
-        "peopleManagerDialog"
-    ).showModal();
+    document
+        .getElementById(
+            "peopleManagerDialog"
+        )
+        .showModal();
 
 }
 
 
-function closePeopleManager(){
+function closePeopleManager() {
 
-    document.getElementById(
-        "peopleManagerDialog"
-    ).close();
+    document
+        .getElementById(
+            "peopleManagerDialog"
+        )
+        .close();
 
 }
 
 
 /* =========================================================
-   RENDER PEOPLE MANAGER
+   PEOPLE MANAGER LIST
 ========================================================= */
 
-function renderPeopleManager(){
+function renderPeopleManager() {
 
     const container =
-        document.getElementById(
-            "peopleList"
-        );
+        document
+            .getElementById("peopleList");
 
 
-    if(!people.length){
+    if(!people.length) {
 
         container.innerHTML = `
 
@@ -3267,8 +2948,11 @@ function renderPeopleManager(){
     }
 
 
-    container.innerHTML =
-        people.map(person => {
+    container.innerHTML = "";
+
+
+    people.forEach(
+        function(person) {
 
             const taskCount =
                 tasks.filter(
@@ -3279,47 +2963,61 @@ function renderPeopleManager(){
                 ).length;
 
 
-            return `
-
-                <div class="people-item">
-
-
-                    <div>
-
-                        <div
-                            class="people-item-name"
-                        >
-
-                            ${esc(
-                                person.name
-                            )}
-
-                        </div>
+            const item =
+                document.createElement("div");
 
 
-                        <div class="muted">
+            item.className =
+                "people-item";
 
-                            ${taskCount}
-                            task
 
-                        </div>
+            item.innerHTML = `
+
+                <div>
+
+                    <div class="people-item-name">
+
+                        ${esc(person.name)}
 
                     </div>
 
+                    <div class="muted">
 
-                    <button
-                        class="btn danger"
-                        onclick="deletePerson('${person.id}')"
-                    >
-                        Hapus
-                    </button>
+                        ${taskCount} task
 
+                    </div>
 
                 </div>
 
+
+                <button
+                    class="btn danger"
+                    data-person-id="${person.id}"
+                >
+                    Hapus
+                </button>
+
             `;
 
-        }).join("");
+
+            item
+                .querySelector("button")
+                .addEventListener(
+                    "click",
+                    function() {
+
+                        deletePerson(
+                            person.id
+                        );
+
+                    }
+                );
+
+
+            container.appendChild(item);
+
+        }
+    );
 
 }
 
@@ -3328,7 +3026,7 @@ function renderPeopleManager(){
    DELETE PERSON
 ========================================================= */
 
-async function deletePerson(id){
+async function deletePerson(id) {
 
     const person =
         people.find(
@@ -3339,10 +3037,8 @@ async function deletePerson(id){
         );
 
 
-    if(!person){
-
+    if(!person) {
         return;
-
     }
 
 
@@ -3355,7 +3051,7 @@ async function deletePerson(id){
         ).length;
 
 
-    if(taskCount > 0){
+    if(taskCount > 0) {
 
         alert(
 
@@ -3376,16 +3072,12 @@ async function deletePerson(id){
     }
 
 
-    const confirmed =
-        confirm(
+    if(
+        !confirm(
             `Hapus orang "${person.name}"?`
-        );
-
-
-    if(!confirmed){
-
+        )
+    ) {
         return;
-
     }
 
 
@@ -3395,10 +3087,10 @@ async function deletePerson(id){
         await supabaseClient
             .from("people")
             .delete()
-            .eq("id",id);
+            .eq("id", id);
 
 
-    if(error){
+    if(error) {
 
         alert(
             "Gagal menghapus orang:\n\n"
@@ -3415,7 +3107,7 @@ async function deletePerson(id){
         selectedPIC
         ===
         person.name
-    ){
+    ) {
 
         selectedPIC =
             "ALL";
@@ -3425,10 +3117,11 @@ async function deletePerson(id){
 
     await loadPeople();
 
+    render();
 
     renderPeopleManager();
 
-    render();
+    updateStatusbar();
 
 }
 
@@ -3437,17 +3130,17 @@ async function deletePerson(id){
    CLOSE TASK
 ========================================================= */
 
-function closeTaskDialog(){
+function closeTaskDialog() {
 
-    document.getElementById(
-        "taskDialog"
-    ).close();
+    document
+        .getElementById("taskDialog")
+        .close();
 
 }
 
 
 /* =========================================================
-   START APPLICATION
+   START
 ========================================================= */
 
 init();
