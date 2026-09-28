@@ -795,6 +795,45 @@ dialog::backdrop {
     height: 45px;
 }
 
+
+/* =========================================================
+   PERSON VIEW - SELESAI HIJAU & BUTTON KECIL
+========================================================= */
+
+.person-table tr.done-row td {
+    background: #dcfce7;
+}
+
+.person-table tr.done-row:hover td {
+    background: #d1fae5;
+}
+
+.person-table .actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 3px;
+    flex-wrap: wrap;
+}
+
+.person-table .actions button {
+    height: 20px;
+    min-height: 20px;
+    padding: 2px 6px;
+    border: 1px solid #d8dee6;
+    border-radius: 4px;
+    font-size: 9px;
+    line-height: 1;
+    font-weight: 600;
+    cursor: pointer;
+    background: white;
+    color: #475569;
+}
+
+.person-table .actions button:hover {
+    background: #eef2f7;
+}
+
 </style>
 
 </head>
@@ -2327,7 +2366,7 @@ function renderPersonTable(list) {
 
             html += `
 
-                <tr>
+                <tr class="${task.status === "Selesai" ? "done-row" : ""}">
 
                     <td>
 
