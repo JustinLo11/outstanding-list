@@ -1,3610 +1,618 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-
 <meta charset="UTF-8">
-
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
->
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Outstanding List</title>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <style>
-
-/* =========================================================
-   GLOBAL
-========================================================= */
-
-:root {
-    --bg: #f4f6f8;
-    --card: #ffffff;
-    --text: #1f2937;
-    --muted: #6b7280;
-    --line: #e5e7eb;
-
-    --primary: #2563eb;
-    --green: #15803d;
-    --green-soft: #dcfce7;
-
-    --yellow-soft: #fff7ed;
-
-    --red: #dc2626;
-
-    --shadow: 0 2px 10px rgba(15, 23, 42, .06);
-}
-
-* {
-    box-sizing: border-box;
-}
-
-body {
-    margin: 0;
-    font-family: Arial, Helvetica, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-}
-
-
-/* =========================================================
-   HEADER
-========================================================= */
-
-header {
-    background: #172033;
-    color: white;
-    padding: 14px 20px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: 0 2px 10px rgba(0,0,0,.12);
-}
-
-.brand {
-    font-size: 20px;
-    font-weight: 700;
-    margin-bottom: 12px;
-}
-
-nav {
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-    align-items: center;
-}
-
-nav button {
-    border: 0;
-    background: #2b3850;
-    color: white;
-    padding: 7px 12px;
-    border-radius: 7px;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 13px;
-    transition: .15s;
-}
-
-nav button:hover {
-    background: #3d4c68;
-}
-
-nav button.active {
-    background: var(--primary);
-}
-
-nav button.add-person {
-    background: #15803d;
-}
-
-nav button.manage-person {
-    background: #475569;
-}
-
-
-/* =========================================================
-   MAIN
-========================================================= */
-
-main {
-    width: 100%;
-    padding: 18px;
-}
-
-
-/* =========================================================
-   TOOLBAR
-========================================================= */
-
-.toolbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-bottom: 12px;
-}
-
-.toolbar-left {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-}
-
-input,
-select,
-textarea {
-    font: inherit;
-    border: 1px solid #d5dbe3;
-    border-radius: 7px;
-    padding: 8px 10px;
-    background: white;
-    color: var(--text);
-    outline: none;
-}
-
-input:focus,
-select:focus,
-textarea:focus {
-    border-color: #93c5fd;
-    box-shadow: 0 0 0 3px rgba(37,99,235,.08);
-}
-
-input[type="search"] {
-    min-width: 280px;
-}
-
-.btn {
-    border: 0;
-    border-radius: 7px;
-    padding: 9px 13px;
-    cursor: pointer;
-    font-weight: 700;
-}
-
-.primary {
-    background: var(--primary);
-    color: white;
-}
-
-.secondary {
-    background: #eef2f7;
-    color: var(--text);
-}
-
-.success {
-    background: var(--green);
-    color: white;
-}
-
-.danger {
-    background: var(--red);
-    color: white;
-}
-
-
-/* =========================================================
-   STATUS BAR
-========================================================= */
-
-.statusbar {
-    margin-bottom: 12px;
-    color: var(--muted);
-    font-size: 13px;
-}
-
-.error {
-    color: var(--red);
-    font-weight: 700;
-}
-
-
-/* =========================================================
-   OVERALL
-========================================================= */
-
-.overall-section {
-    margin-bottom: 20px;
-}
-
-.overall-heading {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
-}
-
-.overall-heading-title {
-    font-size: 16px;
-    font-weight: 700;
-}
-
-.overall-heading-title.running {
-    color: #475569;
-}
-
-.overall-heading-title.done {
-    color: var(--green);
-}
-
-.overall-count {
-    color: var(--muted);
-    font-size: 12px;
-    font-weight: 600;
-}
-
-
-/* =========================================================
-   OVERALL TABLE
-========================================================= */
-
-.overall-wrapper {
-    width: 100%;
-    overflow-x: auto;
-    background: white;
-    border: 1px solid #e1e5ea;
-    border-radius: 10px;
-    box-shadow: var(--shadow);
-}
-
-.overall-table {
-    width: 100%;
-    min-width: 900px;
-    border-collapse: separate;
-    border-spacing: 0;
-    table-layout: fixed;
-}
-
-.overall-table th {
-    padding: 7px 9px;
-    text-align: left;
-    font-size: 13px;
-    font-weight: 700;
-    color: #334155;
-    background: #f8fafc;
-    border-bottom: 1px solid #e2e8f0;
-}
-
-.person-header-button {
-    width: 100%;
-    border: 0;
-    background: transparent;
-    color: #334155;
-    font: inherit;
-    font-weight: 700;
-    cursor: pointer;
-    padding: 4px 2px;
-    text-align: left;
-    border-radius: 5px;
-}
-
-.person-header-button:hover {
-    background: #e2e8f0;
-    color: var(--primary);
-}
-
-.overall-table td {
-    padding: 4px;
-    vertical-align: top;
-    border-bottom: 1px solid #f0f2f5;
-}
-
-.overall-table tr:last-child td {
-    border-bottom: 0;
-}
-
-.overall-table td + td,
-.overall-table th + th {
-    border-left: 1px solid #f1f3f5;
-}
-
-
-/* =========================================================
-   TASK CELL
-========================================================= */
-
-.task-cell {
-    min-height: 58px;
-    padding: 7px 8px;
-    border-radius: 7px;
-
-    background: #f8fafc;
-
-    display: flex;
-    flex-direction: column;
-
-    justify-content: flex-start;
-    align-items: flex-start;
-
-    text-align: left;
-
-    gap: 4px;
-
-    transition: .15s;
-}
-
-.task-cell:hover {
-    box-shadow: 0 2px 7px rgba(15,23,42,.08);
-}
-
-.task-cell.done-cell {
-    background: var(--green-soft);
-}
-
-.task-cell.belum-cell {
-    background: #f8fafc;
-}
-
-.task-cell.proses-cell {
-    background: var(--yellow-soft);
-}
-
-.task-text {
-    width: 100%;
-    font-size: 12px;
-    line-height: 1.35;
-    white-space: pre-wrap;
-    word-break: break-word;
-    text-align: left;
-}
-
-.task-deadline {
-    font-size: 10px;
-    color: #64748b;
-    text-align: left;
-}
-
-.task-status-small {
-    font-size: 9px;
-    font-weight: 700;
-    padding: 2px 6px;
-    border-radius: 999px;
-}
-
-.task-status-small.proses {
-    background: #ffedd5;
-    color: #9a3412;
-}
-
-.task-status-small.selesai {
-    background: #bbf7d0;
-    color: #166534;
-}
-
-
-/* =========================================================
-   TASK ACTION
-========================================================= */
-
-.task-actions {
-    display: flex;
-    justify-content: flex-start;
-    gap: 3px;
-    flex-wrap: wrap;
-}
-
-.task-actions button {
-    border: 1px solid #dbe1e8;
-    background: white;
-    color: #475569;
-
-    padding: 3px 6px;
-
-    border-radius: 5px;
-
-    font-size: 9px;
-
-    cursor: pointer;
-}
-
-.task-actions button:hover {
-    background: #eef2f7;
-}
-
-.task-actions button.finish-btn {
-    color: var(--green);
-}
-
-.task-actions button.finish-btn:hover {
-    background: var(--green-soft);
-}
-
-.empty-cell {
-    height: 58px;
-}
-
-
-/* =========================================================
-   PERSON VIEW
-========================================================= */
-
-.person-view {
-    background: white;
-    border: 1px solid #e1e5ea;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: var(--shadow);
-}
-
-.person-title {
-    padding: 14px 16px;
-    font-size: 17px;
-    font-weight: 700;
-    border-bottom: 1px solid var(--line);
-}
-
-.person-section-title {
-    padding: 10px 14px;
-    font-size: 14px;
-    font-weight: 700;
-    border-bottom: 1px solid var(--line);
-}
-
-.person-section-title.running {
-    color: #475569;
-}
-
-.person-section-title.done {
-    color: var(--green);
-}
-
-.person-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.person-table th,
-.person-table td {
-    padding: 9px 11px;
-    border-bottom: 1px solid var(--line);
-    text-align: left;
-    vertical-align: top;
-}
-
-.person-table th {
-    font-size: 10px;
-    color: var(--muted);
-    background: #fafbfc;
-    text-transform: uppercase;
-}
-
-.person-table tr:last-child td {
-    border-bottom: 0;
-}
-
-.task-name {
-    font-weight: 600;
-    white-space: pre-wrap;
-}
-
-.muted {
-    color: var(--muted);
-    font-size: 12px;
-}
-
-
-/* =========================================================
-   BADGE
-========================================================= */
-
-.badge {
-    display: inline-block;
-    border-radius: 999px;
-    padding: 4px 8px;
-    font-size: 11px;
-    font-weight: 700;
-}
-
-.badge.belum {
-    background: #f1f5f9;
-    color: #475569;
-}
-
-.badge.proses {
-    background: #fff3cd;
-    color: #a16207;
-}
-
-.badge.selesai {
-    background: var(--green-soft);
-    color: var(--green);
-}
-
-
-/* =========================================================
-   ACTION PERSON
-========================================================= */
-
-.actions {
-    display: flex;
-    gap: 4px;
-    flex-wrap: wrap;
-}
-
-.actions button {
-    border: 0;
-    background: #eef2f7;
-    color: #334155;
-    padding: 5px 8px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 11px;
-}
-
-.actions button:hover {
-    background: #dfe5ed;
-}
-
-
-/* =========================================================
-   EMPTY
-========================================================= */
-
-.empty {
-    padding: 25px;
-    text-align: center;
-    color: var(--muted);
-}
-
-
-/* =========================================================
-   DIALOG
-========================================================= */
-
-dialog {
-    border: 0;
-    border-radius: 12px;
-    padding: 0;
-    width: min(620px, 92vw);
-    box-shadow: 0 20px 70px rgba(0,0,0,.28);
-}
-
-dialog::backdrop {
-    background: rgba(0,0,0,.55);
-}
-
-.modal {
-    padding: 20px;
-}
-
-.modal h2 {
-    margin: 0 0 17px;
-}
-
-.form-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-}
-
-.full {
-    grid-column: 1 / -1;
-}
-
-.field label {
-    display: block;
-    font-size: 12px;
-    font-weight: 700;
-    margin-bottom: 5px;
-}
-
-.field input,
-.field select,
-.field textarea {
-    width: 100%;
-}
-
-.field textarea {
-    min-height: 90px;
-    resize: vertical;
-}
-
-.modal-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 8px;
-    margin-top: 16px;
+:root{--bg:#f4f6f8;--card:#fff;--text:#1f2937;--muted:#6b7280;--line:#e5e7eb;--primary:#2563eb;--green:#15803d;--green-soft:#dcfce7;--yellow-soft:#fff7ed;--red:#dc2626;--shadow:0 2px 10px rgba(15,23,42,.06)}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
+
+/* HEADER */
+header{background:#172033;color:#fff;padding:14px 20px;position:sticky;top:0;z-index:100;box-shadow:0 2px 10px rgba(0,0,0,.12)}
+.brand{font-size:20px;font-weight:700;margin-bottom:12px}
+nav{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+nav button{border:0;background:#2b3850;color:#fff;padding:7px 12px;border-radius:7px;cursor:pointer;font-weight:600;font-size:13px;transition:.15s}
+nav button:hover{background:#3d4c68}
+nav button.active{background:var(--primary)}
+nav button.add-person{background:#15803d}
+nav button.manage-person{background:#475569}
+
+/* MAIN & TOOLBAR */
+main{width:100%;padding:18px}
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.toolbar-left{display:flex;gap:8px;flex-wrap:wrap}
+input,select,textarea{font:inherit;border:1px solid #d5dbe3;border-radius:7px;padding:8px 10px;background:#fff;color:var(--text);outline:none}
+input:focus,select:focus,textarea:focus{border-color:#93c5fd;box-shadow:0 0 0 3px rgba(37,99,235,.08)}
+input[type=search]{min-width:280px}
+.btn{border:0;border-radius:7px;padding:9px 13px;cursor:pointer;font-weight:700}
+.primary{background:var(--primary);color:#fff}
+.secondary{background:#eef2f7;color:var(--text)}
+.success{background:var(--green);color:#fff}
+.danger{background:var(--red);color:#fff}
+.statusbar{margin-bottom:12px;color:var(--muted);font-size:13px}
+.error{color:var(--red);font-weight:700}
+
+/* OVERALL */
+.overall-section{margin-bottom:20px}
+.overall-heading{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.overall-heading-title{font-size:16px;font-weight:700}
+.overall-heading-title.running{color:#475569}
+.overall-heading-title.done{color:var(--green)}
+.overall-count{color:var(--muted);font-size:12px;font-weight:600}
+.overall-wrapper{width:100%;overflow-x:auto;background:#fff;border:1px solid #e1e5ea;border-radius:10px;box-shadow:var(--shadow)}
+.overall-table{width:100%;min-width:900px;border-collapse:separate;border-spacing:0;table-layout:fixed}
+.overall-table th{padding:7px 9px;text-align:left;font-size:13px;font-weight:700;color:#334155;background:#f8fafc;border-bottom:1px solid #e2e8f0}
+.person-header-button{width:100%;border:0;background:transparent;color:#334155;font:inherit;font-weight:700;cursor:pointer;padding:4px 2px;text-align:left;border-radius:5px}
+.person-header-button:hover{background:#e2e8f0;color:var(--primary)}
+.overall-table td{padding:4px;vertical-align:top;border-bottom:1px solid #f0f2f5}
+.overall-table tr:last-child td{border-bottom:0}
+.overall-table td+td,.overall-table th+th{border-left:1px solid #f1f3f5}
+
+/* TASK CELL: semua rata kiri */
+.task-cell{padding:9px 10px;border-radius:8px;background:#f8fafc;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;text-align:left;gap:6px;transition:.15s}
+.task-cell:hover{box-shadow:0 2px 7px rgba(15,23,42,.08)}
+.task-cell.done-cell{background:var(--green-soft)}
+.task-cell.proses-cell{background:var(--yellow-soft)}
+.task-text{width:100%;margin:0;padding:0;font-size:13px;line-height:1.35;text-align:left;white-space:pre-wrap;word-break:break-word;overflow-wrap:anywhere}
+.task-deadline{width:100%;font-size:11px;line-height:1.25;color:#64748b;text-align:left}
+.task-status-small{display:inline-block;width:fit-content;padding:3px 8px;font-size:10px;font-weight:700;line-height:1.1;border-radius:999px}
+.task-status-small.proses{background:#ffedd5;color:#9a3412}
+.task-status-small.selesai{background:#bbf7d0;color:#166534}
+
+/* TOMBOL AKSI: dibuat lebih besar */
+.task-actions{display:flex;align-items:center;justify-content:flex-start;gap:6px;width:100%;flex-wrap:wrap;margin-top:2px}
+.task-actions button{height:30px;min-width:36px;padding:0 12px;border:1px solid #d8dee6;border-radius:6px;background:#fff;color:#475569;font-size:12px;font-weight:600;line-height:1;cursor:pointer}
+.task-actions button:hover{background:#eef2f7}
+.task-actions button.finish-btn{min-width:42px;font-size:15px;color:var(--green)}
+.task-actions button.finish-btn:hover{background:var(--green-soft)}
+.empty-cell{height:45px}
+
+/* PERSON VIEW */
+.person-view{background:#fff;border:1px solid #e1e5ea;border-radius:10px;overflow:hidden;box-shadow:var(--shadow)}
+.person-title{padding:14px 16px;font-size:17px;font-weight:700;border-bottom:1px solid var(--line)}
+.person-section-title{padding:10px 14px;font-size:14px;font-weight:700;border-bottom:1px solid var(--line)}
+.person-section-title.running{color:#475569}
+.person-section-title.done{color:var(--green)}
+.person-table{width:100%;border-collapse:collapse}
+.person-table th,.person-table td{padding:9px 11px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.person-table th{font-size:10px;color:var(--muted);background:#fafbfc;text-transform:uppercase}
+.person-table tr:last-child td{border-bottom:0}
+.person-table tr.done-row td{background:#dcfce7}
+.person-table tr.done-row:hover td{background:#d1fae5}
+.task-name{font-weight:600;white-space:pre-wrap;text-align:left}
+.muted{color:var(--muted);font-size:12px}
+.badge{display:inline-block;border-radius:999px;padding:4px 8px;font-size:11px;font-weight:700}
+.badge.belum{background:#f1f5f9;color:#475569}
+.badge.proses{background:#fff3cd;color:#a16207}
+.badge.selesai{background:var(--green-soft);color:var(--green)}
+.actions{display:flex;align-items:center;justify-content:flex-start;gap:6px;flex-wrap:wrap}
+.actions button{height:30px;padding:0 12px;border:1px solid #d8dee6;border-radius:6px;background:#fff;color:#475569;font-size:12px;font-weight:600;line-height:1;cursor:pointer}
+.actions button:hover{background:#eef2f7}
+.empty{padding:25px;text-align:center;color:var(--muted)}
+
+/* DIALOG */
+dialog{border:0;border-radius:12px;padding:0;width:min(620px,92vw);box-shadow:0 20px 70px rgba(0,0,0,.28)}
+dialog::backdrop{background:rgba(0,0,0,.55)}
+.modal{padding:20px}
+.modal h2{margin:0 0 17px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.full{grid-column:1/-1}
+.field label{display:block;font-size:12px;font-weight:700;margin-bottom:5px}
+.field input,.field select,.field textarea{width:100%}
+.field textarea{min-height:90px;resize:vertical}
+.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}
+.people-list{display:flex;flex-direction:column;gap:7px;max-height:400px;overflow-y:auto}
+.people-item{display:flex;justify-content:space-between;align-items:center;gap:10px;border:1px solid #e2e8f0;border-radius:7px;padding:9px 11px}
+.people-item-name{font-weight:700}
+.people-item-actions{display:flex;gap:5px}
+.people-item-actions button{border:0;border-radius:6px;padding:7px 11px;cursor:pointer;font-size:12px;font-weight:700}
+.edit-person-btn{background:#e0ecff;color:#1d4ed8}
+.edit-person-btn:hover{background:#c7dcff}
+.delete-person-btn{background:#fee2e2;color:#b91c1c}
+.delete-person-btn:hover{background:#fecaca}
+
+@media(max-width:700px){
+  main{padding:10px}
+  .form-grid{grid-template-columns:1fr}
+  .full{grid-column:auto}
+  input[type=search]{min-width:0;width:100%}
+  .toolbar-left,.toolbar-left select,.toolbar .primary{width:100%}
+  .task-actions button,.actions button{height:34px}
 }
-
-
-/* =========================================================
-   PEOPLE MANAGER
-========================================================= */
-
-.people-list {
-    display: flex;
-    flex-direction: column;
-    gap: 7px;
-    max-height: 400px;
-    overflow-y: auto;
-}
-
-.people-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
-
-    border: 1px solid #e2e8f0;
-    border-radius: 7px;
-    padding: 9px 11px;
-}
-
-.people-item-name {
-    font-weight: 700;
-}
-
-.people-item-actions {
-    display: flex;
-    gap: 5px;
-}
-
-.people-item-actions button {
-    border: 0;
-    border-radius: 6px;
-    padding: 6px 9px;
-    cursor: pointer;
-    font-size: 11px;
-    font-weight: 700;
-}
-
-.edit-person-btn {
-    background: #e0ecff;
-    color: #1d4ed8;
-}
-
-.edit-person-btn:hover {
-    background: #c7dcff;
-}
-
-.delete-person-btn {
-    background: #fee2e2;
-    color: #b91c1c;
-}
-
-.delete-person-btn:hover {
-    background: #fecaca;
-}
-
-
-/* =========================================================
-   MOBILE
-========================================================= */
-
-@media(max-width:700px) {
-
-    main {
-        padding: 10px;
-    }
-
-    .form-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .full {
-        grid-column: auto;
-    }
-
-    input[type="search"] {
-        min-width: 0;
-        width: 100%;
-    }
-
-    .toolbar-left {
-        width: 100%;
-    }
-
-    .toolbar-left select {
-        width: 100%;
-    }
-
-    .toolbar .primary {
-        width: 100%;
-    }
-
-    .overall-table {
-        min-width: 900px;
-    }
-
-}
-
-
-/* =========================================================
-   TASK CARD - RAPAT & BUTTON LEBIH KECIL
-========================================================= */
-
-.overall-table td {
-    padding: 3px;
-    vertical-align: top;
-}
-
-.task-cell {
-    min-height: 0;
-    padding: 6px 7px;
-    border-radius: 7px;
-    gap: 3px;
-    text-align: left;
-    align-items: flex-start;
-    justify-content: flex-start;
-}
-
-.task-text {
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    font-size: 12px;
-    line-height: 1.3;
-    text-align: left;
-    white-space: pre-wrap;
-    word-break: break-word;
-    overflow-wrap: anywhere;
-}
-
-.task-deadline {
-    width: 100%;
-    margin: 0;
-    font-size: 9px;
-    line-height: 1.25;
-    text-align: left;
-}
-
-.task-status-small {
-    display: inline-block;
-    width: fit-content;
-    margin: 0;
-    padding: 2px 5px;
-    font-size: 8px;
-    line-height: 1.1;
-}
-
-.task-actions {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 3px;
-    margin-top: 1px;
-    width: 100%;
-    flex-wrap: wrap;
-}
-
-.task-actions button {
-    height: 19px;
-    min-height: 19px;
-    padding: 2px 5px;
-    margin: 0;
-    border: 1px solid #d8dee6;
-    border-radius: 4px;
-    font-size: 8px;
-    font-weight: 600;
-    line-height: 1;
-}
-
-.task-actions button:hover {
-    transform: none;
-}
-
-.task-actions button.finish-btn {
-    width: 22px;
-    padding: 2px 0;
-}
-
-.empty-cell {
-    height: 45px;
-}
-
-
-/* =========================================================
-   PERSON VIEW - SELESAI HIJAU & BUTTON KECIL
-========================================================= */
-
-.person-table tr.done-row td {
-    background: #dcfce7;
-}
-
-.person-table tr.done-row:hover td {
-    background: #d1fae5;
-}
-
-.person-table .actions {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 3px;
-    flex-wrap: wrap;
-}
-
-.person-table .actions button {
-    height: 20px;
-    min-height: 20px;
-    padding: 2px 6px;
-    border: 1px solid #d8dee6;
-    border-radius: 4px;
-    font-size: 9px;
-    line-height: 1;
-    font-weight: 600;
-    cursor: pointer;
-    background: white;
-    color: #475569;
-}
-
-.person-table .actions button:hover {
-    background: #eef2f7;
-}
-
 </style>
-
 </head>
-
-
 <body>
 
-
 <header>
-
-    <div class="brand">
-        OUTSTANDING LIST
-    </div>
-
-    <nav id="nav"></nav>
-
+  <div class="brand">OUTSTANDING LIST</div>
+  <nav id="nav"></nav>
 </header>
 
-
 <main>
-
-    <div class="toolbar">
-
-        <div class="toolbar-left">
-
-            <input
-                id="search"
-                type="search"
-                placeholder="🔍 Cari task..."
-            >
-
-            <select id="sort">
-
-                <option value="deadline">
-                    Deadline terdekat
-                </option>
-
-                <option value="newest">
-                    Task terbaru
-                </option>
-
-                <option value="oldest">
-                    Task terlama
-                </option>
-
-            </select>
-
-        </div>
-
-
-        <button
-            id="addTaskButton"
-            class="btn primary"
-        >
-            + Tambah Task
-        </button>
-
+  <div class="toolbar">
+    <div class="toolbar-left">
+      <input id="search" type="search" placeholder="🔍 Cari task...">
+      <select id="sort">
+        <option value="deadline">Deadline terdekat</option>
+        <option value="newest">Task terbaru</option>
+        <option value="oldest">Task terlama</option>
+      </select>
     </div>
-
-
-    <div
-        id="statusbar"
-        class="statusbar"
-    >
-        Menghubungkan ke database...
-    </div>
-
-
-    <div id="app"></div>
-
+    <button id="addTaskButton" class="btn primary">+ Tambah Task</button>
+  </div>
+  <div id="statusbar" class="statusbar">Menghubungkan ke database...</div>
+  <div id="app"></div>
 </main>
 
-
-<!-- =====================================================
-     TASK MODAL
-===================================================== -->
-
-<dialog id="taskDialog">
-
-    <div class="modal">
-
-        <h2 id="modalTitle">
-            Tambah Task
-        </h2>
-
-        <form id="taskForm">
-
-            <input
-                type="hidden"
-                id="taskId"
-            >
-
-            <div class="form-grid">
-
-                <div class="field">
-
-                    <label>PIC</label>
-
-                    <select
-                        id="pic"
-                        required
-                    ></select>
-
-                </div>
-
-
-                <div class="field">
-
-                    <label>Status</label>
-
-                    <select
-                        id="taskStatus"
-                        required
-                    >
-
-                        <option value="Belum">
-                            Belum
-                        </option>
-
-                        <option value="Proses">
-                            Proses
-                        </option>
-
-                        <option value="Selesai">
-                            Selesai
-                        </option>
-
-                    </select>
-
-                </div>
-
-
-                <div class="field full">
-
-                    <label>Task</label>
-
-                    <textarea
-                        id="task"
-                        required
-                        placeholder="Tulis task..."
-                    ></textarea>
-
-                </div>
-
-
-                <div class="field">
-
-                    <label>Deadline</label>
-
-                    <input
-                        id="deadline"
-                        type="date"
-                    >
-
-                </div>
-
-
-                <div class="field">
-
-                    <label>Keterangan</label>
-
-                    <input
-                        id="note"
-                        type="text"
-                        placeholder="Opsional"
-                    >
-
-                </div>
-
-            </div>
-
-
-            <div class="modal-actions">
-
-                <button
-                    type="button"
-                    id="cancelTaskButton"
-                    class="btn secondary"
-                >
-                    Batal
-                </button>
-
-                <button
-                    type="submit"
-                    class="btn primary"
-                >
-                    Simpan
-                </button>
-
-            </div>
-
-        </form>
-
+<dialog id="taskDialog"><div class="modal">
+  <h2 id="modalTitle">Tambah Task</h2>
+  <form id="taskForm">
+    <input type="hidden" id="taskId">
+    <div class="form-grid">
+      <div class="field"><label>PIC</label><select id="pic" required></select></div>
+      <div class="field"><label>Status</label>
+        <select id="taskStatus" required><option value="Belum">Belum</option><option value="Proses">Proses</option><option value="Selesai">Selesai</option></select>
+      </div>
+      <div class="field full"><label>Task</label><textarea id="task" required placeholder="Tulis task..."></textarea></div>
+      <div class="field"><label>Deadline</label><input id="deadline" type="date"></div>
+      <div class="field"><label>Keterangan</label><input id="note" type="text" placeholder="Opsional"></div>
     </div>
-
-</dialog>
-
-
-<!-- =====================================================
-     ADD PERSON
-===================================================== -->
-
-<dialog id="personDialog">
-
-    <div class="modal">
-
-        <h2>
-            Tambah Orang
-        </h2>
-
-        <form id="personForm">
-
-            <div class="field">
-
-                <label>Nama</label>
-
-                <input
-                    id="personName"
-                    type="text"
-                    required
-                    placeholder="Contoh: Andi"
-                    autocomplete="off"
-                >
-
-            </div>
-
-
-            <div class="modal-actions">
-
-                <button
-                    type="button"
-                    id="cancelPersonButton"
-                    class="btn secondary"
-                >
-                    Batal
-                </button>
-
-                <button
-                    type="submit"
-                    class="btn success"
-                >
-                    Tambah
-                </button>
-
-            </div>
-
-        </form>
-
+    <div class="modal-actions">
+      <button type="button" id="cancelTaskButton" class="btn secondary">Batal</button>
+      <button type="submit" class="btn primary">Simpan</button>
     </div>
+  </form>
+</div></dialog>
 
-</dialog>
-
-
-<!-- =====================================================
-     EDIT PERSON
-===================================================== -->
-
-<dialog id="editPersonDialog">
-
-    <div class="modal">
-
-        <h2>
-            Edit Nama
-        </h2>
-
-        <form id="editPersonForm">
-
-            <input
-                type="hidden"
-                id="editPersonId"
-            >
-
-            <input
-                type="hidden"
-                id="editPersonOldName"
-            >
-
-
-            <div class="field">
-
-                <label>Nama Baru</label>
-
-                <input
-                    id="editPersonName"
-                    type="text"
-                    required
-                    autocomplete="off"
-                >
-
-            </div>
-
-
-            <div class="modal-actions">
-
-                <button
-                    type="button"
-                    id="cancelEditPersonButton"
-                    class="btn secondary"
-                >
-                    Batal
-                </button>
-
-                <button
-                    type="submit"
-                    class="btn primary"
-                >
-                    Simpan Perubahan
-                </button>
-
-            </div>
-
-        </form>
-
+<dialog id="personDialog"><div class="modal">
+  <h2>Tambah Orang</h2>
+  <form id="personForm">
+    <div class="field"><label>Nama</label><input id="personName" type="text" required placeholder="Contoh: Andi" autocomplete="off"></div>
+    <div class="modal-actions">
+      <button type="button" id="cancelPersonButton" class="btn secondary">Batal</button>
+      <button type="submit" class="btn success">Tambah</button>
     </div>
+  </form>
+</div></dialog>
 
-</dialog>
-
-
-<!-- =====================================================
-     MANAGE PEOPLE
-===================================================== -->
-
-<dialog id="peopleManagerDialog">
-
-    <div class="modal">
-
-        <h2>
-            Kelola Orang
-        </h2>
-
-        <div
-            id="peopleList"
-            class="people-list"
-        ></div>
-
-        <div class="modal-actions">
-
-            <button
-                type="button"
-                id="closePeopleButton"
-                class="btn secondary"
-            >
-                Tutup
-            </button>
-
-        </div>
-
+<dialog id="editPersonDialog"><div class="modal">
+  <h2>Edit Nama</h2>
+  <form id="editPersonForm">
+    <input type="hidden" id="editPersonId">
+    <input type="hidden" id="editPersonOldName">
+    <div class="field"><label>Nama Baru</label><input id="editPersonName" type="text" required autocomplete="off"></div>
+    <div class="modal-actions">
+      <button type="button" id="cancelEditPersonButton" class="btn secondary">Batal</button>
+      <button type="submit" class="btn primary">Simpan Perubahan</button>
     </div>
+  </form>
+</div></dialog>
 
-</dialog>
-
+<dialog id="peopleManagerDialog"><div class="modal">
+  <h2>Kelola Orang</h2>
+  <div id="peopleList" class="people-list"></div>
+  <div class="modal-actions"><button type="button" id="closePeopleButton" class="btn secondary">Tutup</button></div>
+</div></dialog>
 
 <script>
+const SUPABASE_URL = "https://zwgstnuevycnyzgcggxy.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_W1-empf5i4JK4T4v7DNwmA_BV9RXUs7";
 
-/* =========================================================
-   SUPABASE
-========================================================= */
+const $ = id => document.getElementById(id);
+let supabaseClient, people = [], tasks = [], selectedPIC = "ALL";
 
-const SUPABASE_URL =
-    "https://zwgstnuevycnyzgcggxy.supabase.co";
-
-const SUPABASE_PUBLISHABLE_KEY =
-    "sb_publishable_W1-empf5i4JK4T4v7DNwmA_BV9RXUs7";
-
-
-let supabaseClient;
-
-let people = [];
-
-let tasks = [];
-
-let selectedPIC = "ALL";
-
-
-/* =========================================================
-   INIT
-========================================================= */
-
-async function init() {
-
-    try {
-
-        supabaseClient =
-            supabase.createClient(
-                SUPABASE_URL,
-                SUPABASE_PUBLISHABLE_KEY
-            );
-
-
-        await loadPeople();
-
-        await loadTasks();
-
-
-        document
-            .getElementById("addTaskButton")
-            .addEventListener(
-                "click",
-                openAdd
-            );
-
-
-        document
-            .getElementById("cancelTaskButton")
-            .addEventListener(
-                "click",
-                closeTaskDialog
-            );
-
-
-        document
-            .getElementById("cancelPersonButton")
-            .addEventListener(
-                "click",
-                closePersonDialog
-            );
-
-
-        document
-            .getElementById("cancelEditPersonButton")
-            .addEventListener(
-                "click",
-                closeEditPersonDialog
-            );
-
-
-        document
-            .getElementById("closePeopleButton")
-            .addEventListener(
-                "click",
-                closePeopleManager
-            );
-
-
-        document
-            .getElementById("taskForm")
-            .addEventListener(
-                "submit",
-                saveTask
-            );
-
-
-        document
-            .getElementById("personForm")
-            .addEventListener(
-                "submit",
-                addPerson
-            );
-
-
-        document
-            .getElementById("editPersonForm")
-            .addEventListener(
-                "submit",
-                updatePerson
-            );
-
-
-        document
-            .getElementById("search")
-            .addEventListener(
-                "input",
-                render
-            );
-
-
-        document
-            .getElementById("sort")
-            .addEventListener(
-                "change",
-                render
-            );
-
-    } catch(error) {
-
-        console.error(error);
-
-        document
-            .getElementById("statusbar")
-            .innerHTML =
-                `<span class="error">
-                    Gagal menjalankan aplikasi.
-                </span>`;
-
-    }
-
+/* ---------- helper ---------- */
+const esc = v => String(v ?? "").replace(/[&<>"']/g, m => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+function formatDate(v){
+  if(!v) return "-";
+  const p = v.split("-");
+  return p.length === 3 ? `${p[2]}/${p[1]}/${p[0]}` : v;
 }
-
-
-/* =========================================================
-   ESCAPE
-========================================================= */
-
-function esc(value) {
-
-    return String(value ?? "")
-        .replace(
-            /[&<>"']/g,
-            function(m) {
-
-                return {
-
-                    "&": "&amp;",
-                    "<": "&lt;",
-                    ">": "&gt;",
-                    '"': "&quot;",
-                    "'": "&#039;"
-
-                }[m];
-
-            }
-        );
-
+function showError(label, err){
+  console.error(err);
+  $("statusbar").innerHTML = `<span class="error">${label}</span> ${esc(err.message)}`;
 }
-
-
-/* =========================================================
-   DATE
-========================================================= */
-
-function formatDate(value) {
-
-    if (!value) {
-        return "-";
-    }
-
-    const parts = value.split("-");
-
-    if (parts.length !== 3) {
-        return value;
-    }
-
-    return `${parts[2]}/${parts[1]}/${parts[0]}`;
-
+function updateStatusbar(){
+  $("statusbar").textContent = `Terhubung ke Supabase • ${tasks.length} task • ${people.length} orang`;
 }
-
-
-/* =========================================================
-   LOAD PEOPLE
-========================================================= */
-
-async function loadPeople() {
-
-    const {
-        data,
-        error
-    } =
-        await supabaseClient
-            .from("people")
-            .select("*")
-            .order(
-                "name",
-                {
-                    ascending: true
-                }
-            );
-
-
-    if (error) {
-
-        console.error(error);
-
-        document
-            .getElementById("statusbar")
-            .innerHTML =
-                `<span class="error">
-                    Gagal membaca data orang:
-                </span> ${esc(error.message)}`;
-
-        return;
-
-    }
-
-
-    people = data || [];
-
-
-    renderNav();
-
-    fillPICSelect();
-
-}
-
-
-/* =========================================================
-   LOAD TASKS
-========================================================= */
-
-async function loadTasks() {
-
-    const {
-        data,
-        error
-    } =
-        await supabaseClient
-            .from("tasks")
-            .select("*")
-            .order(
-                "deadline",
-                {
-                    ascending: true,
-                    nullsFirst: false
-                }
-            );
-
-
-    if (error) {
-
-        console.error(error);
-
-        document
-            .getElementById("statusbar")
-            .innerHTML =
-                `<span class="error">
-                    Gagal membaca task:
-                </span> ${esc(error.message)}`;
-
-        return;
-
-    }
-
-
-    tasks = data || [];
-
-
-    updateStatusbar();
-
-    render();
-
-}
-
-
-/* =========================================================
-   STATUS BAR
-========================================================= */
-
-function updateStatusbar() {
-
-    document
-        .getElementById("statusbar")
-        .textContent =
-            `Terhubung ke Supabase • `
-            + `${tasks.length} task • `
-            + `${people.length} orang`;
-
-}
-
-
-/* =========================================================
-   NAVBAR
-========================================================= */
-
-function renderNav() {
-
-    const nav =
-        document.getElementById("nav");
-
-
-    nav.innerHTML = "";
-
-
-    const overallButton =
-        document.createElement("button");
-
-    overallButton.textContent =
-        "Overall";
-
-    overallButton.className =
-        selectedPIC === "ALL"
-            ? "active"
-            : "";
-
-
-    overallButton.addEventListener(
-        "click",
-        function() {
-
-            selectedPIC = "ALL";
-
-            renderNav();
-
-            render();
-
-        }
-    );
-
-
-    nav.appendChild(
-        overallButton
-    );
-
-
-    people.forEach(
-        function(person) {
-
-            const button =
-                document.createElement("button");
-
-
-            button.textContent =
-                person.name;
-
-
-            if(
-                selectedPIC
-                ===
-                person.name
-            ) {
-
-                button.classList.add(
-                    "active"
-                );
-
-            }
-
-
-            button.addEventListener(
-                "click",
-                function() {
-
-                    selectedPIC =
-                        person.name;
-
-                    renderNav();
-
-                    render();
-
-                }
-            );
-
-
-            nav.appendChild(
-                button
-            );
-
-        }
-    );
-
-
-    const addPersonButton =
-        document.createElement("button");
-
-
-    addPersonButton.textContent =
-        "+ Orang";
-
-    addPersonButton.className =
-        "add-person";
-
-
-    addPersonButton.addEventListener(
-        "click",
-        openPersonDialog
-    );
-
-
-    nav.appendChild(
-        addPersonButton
-    );
-
-
-    const manageButton =
-        document.createElement("button");
-
-
-    manageButton.textContent =
-        "⚙ Kelola";
-
-    manageButton.className =
-        "manage-person";
-
-
-    manageButton.addEventListener(
-        "click",
-        openPeopleManager
-    );
-
-
-    nav.appendChild(
-        manageButton
-    );
-
-}
-
-
-/* =========================================================
-   FILTER
-========================================================= */
-
-function filteredTasks() {
-
-    const query =
-        document
-            .getElementById("search")
-            .value
-            .trim()
-            .toLowerCase();
-
-
-    let list =
-        tasks.filter(
-            function(task) {
-
-                if(
-                    selectedPIC !== "ALL"
-                    &&
-                    task.pic !== selectedPIC
-                ) {
-
-                    return false;
-
-                }
-
-
-                if(!query) {
-
-                    return true;
-
-                }
-
-
-                return [
-
-                    task.pic,
-                    task.task,
-                    task.note,
-                    task.status,
-                    task.deadline
-
-                ]
-                    .join(" ")
-                    .toLowerCase()
-                    .includes(query);
-
-            }
-        );
-
-
-    const sort =
-        document
-            .getElementById("sort")
-            .value;
-
-
-    list.sort(
-        function(a,b) {
-
-            if(sort === "newest") {
-
-                return new Date(b.created_at)
-                    -
-                    new Date(a.created_at);
-
-            }
-
-
-            if(sort === "oldest") {
-
-                return new Date(a.created_at)
-                    -
-                    new Date(b.created_at);
-
-            }
-
-
-            const ad =
-                a.deadline || "9999-12-31";
-
-            const bd =
-                b.deadline || "9999-12-31";
-
-
-            return ad.localeCompare(bd);
-
-        }
-    );
-
-
-    return list;
-
-}
-
-
-/* =========================================================
-   RENDER
-========================================================= */
-
-function render() {
-
-    const app =
-        document.getElementById("app");
-
-
-    if(selectedPIC === "ALL") {
-
-        app.innerHTML =
-            renderOverall();
-
-        attachOverallButtons();
-
-    } else {
-
-        app.innerHTML =
-            renderPersonView(
-                selectedPIC
-            );
-
-        attachPersonButtons();
-
-    }
-
-}
-
-
-/* =========================================================
-   OVERALL
-========================================================= */
-
-function renderOverall() {
-
-    const list =
-        filteredTasks();
-
-
-    const outstanding =
-        list.filter(
-            task =>
-                task.status !== "Selesai"
-        );
-
-
-    const completed =
-        list.filter(
-            task =>
-                task.status === "Selesai"
-        );
-
-
-    return `
-
-        ${renderOverallTable(
-            "OUTSTANDING LIST",
-            outstanding,
-            false
-        )}
-
-        ${renderOverallTable(
-            "SELESAI",
-            completed,
-            true
-        )}
-
-    `;
-
-}
-
-
-/* =========================================================
-   OVERALL TABLE
-========================================================= */
-
-function renderOverallTable(
-    title,
-    list,
-    isDone
-) {
-
-    if(!people.length) {
-
-        return `
-
-            <div class="overall-section">
-
-                <div class="overall-heading">
-
-                    <div
-                        class="
-                            overall-heading-title
-                            ${isDone ? "done" : "running"}
-                        "
-                    >
-                        ${title}
-                    </div>
-
-                </div>
-
-                <div class="overall-wrapper">
-
-                    <div class="empty">
-                        Belum ada orang.
-                    </div>
-
-                </div>
-
-            </div>
-
-        `;
-
-    }
-
-
-    const grouped = {};
-
-
-    people.forEach(
-        function(person) {
-
-            grouped[person.name] = [];
-
-        }
-    );
-
-
-    list.forEach(
-        function(task) {
-
-            if(!grouped[task.pic]) {
-
-                grouped[task.pic] = [];
-
-            }
-
-            grouped[task.pic].push(task);
-
-        }
-    );
-
-
-    let maxRows = 0;
-
-
-    people.forEach(
-        function(person) {
-
-            const count =
-                grouped[person.name].length;
-
-            if(count > maxRows) {
-                maxRows = count;
-            }
-
-        }
-    );
-
-
-    if(maxRows === 0) {
-        maxRows = 1;
-    }
-
-
-    let html = `
-
-        <div class="overall-section">
-
-            <div class="overall-heading">
-
-                <div
-                    class="
-                        overall-heading-title
-                        ${isDone ? "done" : "running"}
-                    "
-                >
-                    ${title}
-                </div>
-
-                <div class="overall-count">
-                    ${list.length} task
-                </div>
-
-            </div>
-
-
-            <div class="overall-wrapper">
-
-                <table class="overall-table">
-
-                    <thead>
-
-                        <tr>
-
-    `;
-
-
-    people.forEach(
-        function(person) {
-
-            html += `
-
-                <th>
-
-                    <button
-                        class="person-header-button"
-                        data-person="${esc(person.name)}"
-                    >
-                        ${esc(person.name)}
-                    </button>
-
-                </th>
-
-            `;
-
-        }
-    );
-
-
-    html += `
-
-                        </tr>
-
-                    </thead>
-
-                    <tbody>
-
-    `;
-
-
-    for(
-        let row = 0;
-        row < maxRows;
-        row++
-    ) {
-
-        html += "<tr>";
-
-
-        people.forEach(
-            function(person) {
-
-                const personTasks =
-                    grouped[person.name];
-
-
-                const task =
-                    personTasks[row];
-
-
-                if(task) {
-
-                    let cellClass =
-                        "belum-cell";
-
-
-                    if(
-                        task.status === "Proses"
-                    ) {
-
-                        cellClass =
-                            "proses-cell";
-
-                    }
-
-
-                    if(
-                        task.status === "Selesai"
-                    ) {
-
-                        cellClass =
-                            "done-cell";
-
-                    }
-
-
-                    html += `
-
-                        <td>
-
-                            <div
-                                class="
-                                    task-cell
-                                    ${cellClass}
-                                "
-                            >
-
-                                <div class="task-text">
-                                    ${esc(task.task)}
-                                </div>
-
-
-                                ${
-                                    task.deadline
-                                    ?
-                                    `
-                                    <div class="task-deadline">
-                                        Deadline:
-                                        ${formatDate(
-                                            task.deadline
-                                        )}
-                                    </div>
-                                    `
-                                    :
-                                    ""
-                                }
-
-
-                                ${
-                                    task.status === "Proses"
-                                    ?
-                                    `
-                                    <span
-                                        class="
-                                            task-status-small
-                                            proses
-                                        "
-                                    >
-                                        Proses
-                                    </span>
-                                    `
-                                    :
-                                    ""
-                                }
-
-
-                                ${
-                                    task.status === "Selesai"
-                                    ?
-                                    `
-                                    <span
-                                        class="
-                                            task-status-small
-                                            selesai
-                                        "
-                                    >
-                                        ✓ Selesai
-                                    </span>
-                                    `
-                                    :
-                                    ""
-                                }
-
-
-                                <div
-                                    class="task-actions"
-                                >
-
-                                    <button
-                                        data-action="edit"
-                                        data-id="${task.id}"
-                                    >
-                                        Edit
-                                    </button>
-
-
-                                    ${
-                                        task.status === "Selesai"
-
-                                        ?
-
-                                        `
-                                        <button
-                                            data-action="status"
-                                            data-id="${task.id}"
-                                            data-status="Proses"
-                                        >
-                                            Buka
-                                        </button>
-                                        `
-
-                                        :
-
-                                        `
-                                        <button
-                                            class="finish-btn"
-                                            data-action="status"
-                                            data-id="${task.id}"
-                                            data-status="Selesai"
-                                        >
-                                            ✓
-                                        </button>
-                                        `
-                                    }
-
-
-                                    <button
-                                        data-action="delete"
-                                        data-id="${task.id}"
-                                    >
-                                        ×
-                                    </button>
-
-                                </div>
-
-                            </div>
-
-                        </td>
-
-                    `;
-
-                } else {
-
-                    html += `
-
-                        <td>
-
-                            <div class="empty-cell"></div>
-
-                        </td>
-
-                    `;
-
-                }
-
-            }
-        );
-
-
-        html += "</tr>";
-
-    }
-
-
-    html += `
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-        </div>
-
-    `;
-
-
-    return html;
-
-}
-
-
-/* =========================================================
-   OVERALL BUTTONS
-========================================================= */
-
-function attachOverallButtons() {
-
-    document
-        .querySelectorAll(
-            ".person-header-button"
-        )
-        .forEach(
-            function(button) {
-
-                button.addEventListener(
-                    "click",
-                    function() {
-
-                        selectedPIC =
-                            this.dataset.person;
-
-                        renderNav();
-
-                        render();
-
-                    }
-                );
-
-            }
-        );
-
-
-    document
-        .querySelectorAll(
-            ".task-actions button"
-        )
-        .forEach(
-            function(button) {
-
-                button.addEventListener(
-                    "click",
-                    async function() {
-
-                        const action =
-                            this.dataset.action;
-
-                        const id =
-                            this.dataset.id;
-
-
-                        if(action === "edit") {
-
-                            openEdit(id);
-
-                        }
-
-
-                        if(action === "delete") {
-
-                            await deleteTask(id);
-
-                        }
-
-
-                        if(action === "status") {
-
-                            await quickStatus(
-                                id,
-                                this.dataset.status
-                            );
-
-                        }
-
-                    }
-                );
-
-            }
-        );
-
-}
-
-
-/* =========================================================
-   PERSON VIEW
-========================================================= */
-
-function renderPersonView(name) {
-
-    const list =
-        filteredTasks().filter(
-            task =>
-                task.pic === name
-        );
-
-
-    const running =
-        list.filter(
-            task =>
-                task.status !== "Selesai"
-        );
-
-
-    const done =
-        list.filter(
-            task =>
-                task.status === "Selesai"
-        );
-
-
-    return `
-
-        <div class="person-view">
-
-            <div class="person-title">
-
-                ${esc(name)}
-
-                <span class="muted">
-                    • ${list.length} task
-                </span>
-
-            </div>
-
-
-            <div class="
-                person-section-title
-                running
-            ">
-                OUTSTANDING
-                <span class="muted">
-                    (${running.length})
-                </span>
-            </div>
-
-
-            ${renderPersonTable(running)}
-
-
-            <div class="
-                person-section-title
-                done
-            ">
-                SELESAI
-                <span class="muted">
-                    (${done.length})
-                </span>
-            </div>
-
-
-            ${renderPersonTable(done)}
-
-        </div>
-
-    `;
-
-}
-
-
-/* =========================================================
-   PERSON TABLE
-========================================================= */
-
-function renderPersonTable(list) {
-
-    if(!list.length) {
-
-        return `
-
-            <div class="empty">
-                Tidak ada task.
-            </div>
-
-        `;
-
-    }
-
-
-    let html = `
-
-        <table class="person-table">
-
-            <thead>
-
-                <tr>
-
-                    <th>Task</th>
-                    <th>Deadline</th>
-                    <th>Status</th>
-                    <th>Keterangan</th>
-                    <th>Aksi</th>
-
-                </tr>
-
-            </thead>
-
-            <tbody>
-
-    `;
-
-
-    list.forEach(
-        function(task) {
-
-            html += `
-
-                <tr class="${task.status === "Selesai" ? "done-row" : ""}">
-
-                    <td>
-
-                        <div class="task-name">
-                            ${esc(task.task)}
-                        </div>
-
-                    </td>
-
-
-                    <td>
-                        ${formatDate(task.deadline)}
-                    </td>
-
-
-                    <td>
-                        ${statusBadge(task.status)}
-                    </td>
-
-
-                    <td class="muted">
-                        ${esc(task.note || "-")}
-                    </td>
-
-
-                    <td>
-
-                        <div class="actions">
-
-                            <button
-                                data-action="edit"
-                                data-id="${task.id}"
-                            >
-                                Edit
-                            </button>
-
-
-                            ${
-                                task.status === "Selesai"
-
-                                ?
-
-                                `
-                                <button
-                                    data-action="status"
-                                    data-id="${task.id}"
-                                    data-status="Proses"
-                                >
-                                    Buka
-                                </button>
-                                `
-
-                                :
-
-                                `
-                                <button
-                                    data-action="status"
-                                    data-id="${task.id}"
-                                    data-status="Selesai"
-                                >
-                                    Selesai
-                                </button>
-                                `
-                            }
-
-
-                            <button
-                                data-action="delete"
-                                data-id="${task.id}"
-                            >
-                                Hapus
-                            </button>
-
-                        </div>
-
-                    </td>
-
-                </tr>
-
-            `;
-
-        }
-    );
-
-
-    html += `
-
-            </tbody>
-
-        </table>
-
-    `;
-
-
-    return html;
-
-}
-
-
-/* =========================================================
-   PERSON BUTTONS
-========================================================= */
-
-function attachPersonButtons() {
-
-    document
-        .querySelectorAll(
-            ".person-table button"
-        )
-        .forEach(
-            function(button) {
-
-                button.addEventListener(
-                    "click",
-                    async function() {
-
-                        const action =
-                            this.dataset.action;
-
-                        const id =
-                            this.dataset.id;
-
-
-                        if(action === "edit") {
-
-                            openEdit(id);
-
-                        }
-
-
-                        if(action === "delete") {
-
-                            await deleteTask(id);
-
-                        }
-
-
-                        if(action === "status") {
-
-                            await quickStatus(
-                                id,
-                                this.dataset.status
-                            );
-
-                        }
-
-                    }
-                );
-
-            }
-        );
-
-}
-
-
-/* =========================================================
-   STATUS BADGE
-========================================================= */
-
-function statusBadge(status) {
-
-    let className = "belum";
-
-
-    if(status === "Proses") {
-        className = "proses";
-    }
-
-
-    if(status === "Selesai") {
-        className = "selesai";
-    }
-
-
-    return `
-
-        <span class="badge ${className}">
-            ${esc(status)}
-        </span>
-
-    `;
-
-}
-
-
-/* =========================================================
-   PIC SELECT
-========================================================= */
-
-function fillPICSelect() {
-
-    const select =
-        document.getElementById("pic");
-
-
-    if(!select) {
-        return;
-    }
-
-
-    select.innerHTML = "";
-
-
-    people.forEach(
-        function(person) {
-
-            const option =
-                document.createElement("option");
-
-
-            option.value =
-                person.name;
-
-
-            option.textContent =
-                person.name;
-
-
-            select.appendChild(
-                option
-            );
-
-        }
-    );
-
-}
-
-
-/* =========================================================
-   ADD TASK
-========================================================= */
-
-function openAdd() {
-
-    if(!people.length) {
-
-        alert(
-            "Tambahkan orang terlebih dahulu."
-        );
-
-        return;
-
-    }
-
-
-    document
-        .getElementById("modalTitle")
-        .textContent =
-            "Tambah Task";
-
-
-    document
-        .getElementById("taskForm")
-        .reset();
-
-
-    document
-        .getElementById("taskId")
-        .value = "";
-
-
-    fillPICSelect();
-
-
-    if(
-        selectedPIC !== "ALL"
-        &&
-        people.some(
-            person =>
-                person.name === selectedPIC
-        )
-    ) {
-
-        document
-            .getElementById("pic")
-            .value =
-                selectedPIC;
-
-    }
-
-
-    document
-        .getElementById("taskStatus")
-        .value =
-            "Belum";
-
-
-    document
-        .getElementById("taskDialog")
-        .showModal();
-
-}
-
-
-/* =========================================================
-   EDIT TASK
-========================================================= */
-
-function openEdit(id) {
-
-    const task =
-        tasks.find(
-            item =>
-                String(item.id)
-                ===
-                String(id)
-        );
-
-
-    if(!task) {
-        return;
-    }
-
-
-    document
-        .getElementById("modalTitle")
-        .textContent =
-            "Edit Task";
-
-
-    document
-        .getElementById("taskId")
-        .value =
-            task.id;
-
-
-    fillPICSelect();
-
-
-    document
-        .getElementById("pic")
-        .value =
-            task.pic;
-
-
-    document
-        .getElementById("task")
-        .value =
-            task.task;
-
-
-    document
-        .getElementById("taskStatus")
-        .value =
-            task.status;
-
-
-    document
-        .getElementById("deadline")
-        .value =
-            task.deadline || "";
-
-
-    document
-        .getElementById("note")
-        .value =
-            task.note || "";
-
-
-    document
-        .getElementById("taskDialog")
-        .showModal();
-
-}
-
-
-/* =========================================================
-   SAVE TASK
-========================================================= */
-
-async function saveTask(event) {
-
-    event.preventDefault();
-
-
-    const id =
-        document
-            .getElementById("taskId")
-            .value;
-
-
-    const payload = {
-
-        pic:
-            document
-                .getElementById("pic")
-                .value,
-
-        task:
-            document
-                .getElementById("task")
-                .value
-                .trim(),
-
-        status:
-            document
-                .getElementById("taskStatus")
-                .value,
-
-        deadline:
-            document
-                .getElementById("deadline")
-                .value
-                ||
-                null,
-
-        note:
-            document
-                .getElementById("note")
-                .value
-                .trim()
-                ||
-                null
-
-    };
-
-
-    let result;
-
-
-    if(id) {
-
-        result =
-            await supabaseClient
-                .from("tasks")
-                .update(payload)
-                .eq("id", id);
-
-    } else {
-
-        result =
-            await supabaseClient
-                .from("tasks")
-                .insert(payload);
-
-    }
-
-
-    if(result.error) {
-
-        alert(
-            "Gagal menyimpan task:\n\n"
-            +
-            result.error.message
-        );
-
-        return;
-
-    }
-
-
-    closeTaskDialog();
-
-    await loadTasks();
-
-}
-
-
-/* =========================================================
-   QUICK STATUS
-========================================================= */
-
-async function quickStatus(
-    id,
-    status
-) {
-
-    const {
-        error
-    } =
-        await supabaseClient
-            .from("tasks")
-            .update({
-                status: status
-            })
-            .eq("id", id);
-
-
-    if(error) {
-
-        alert(
-            "Gagal mengubah status:\n\n"
-            +
-            error.message
-        );
-
-        return;
-
-    }
-
-
-    await loadTasks();
-
-}
-
-
-/* =========================================================
-   DELETE TASK
-========================================================= */
-
-async function deleteTask(id) {
-
-    const task =
-        tasks.find(
-            item =>
-                String(item.id)
-                ===
-                String(id)
-        );
-
-
-    if(!task) {
-        return;
-    }
-
-
-    if(
-        !confirm(
-            `Hapus task berikut?\n\n${task.task}`
-        )
-    ) {
-        return;
-    }
-
-
-    const {
-        error
-    } =
-        await supabaseClient
-            .from("tasks")
-            .delete()
-            .eq("id", id);
-
-
-    if(error) {
-
-        alert(
-            "Gagal menghapus task:\n\n"
-            +
-            error.message
-        );
-
-        return;
-
-    }
-
-
-    await loadTasks();
-
-}
-
-
-/* =========================================================
-   ADD PERSON
-========================================================= */
-
-function openPersonDialog() {
-
-    document
-        .getElementById("personName")
-        .value = "";
-
-
-    document
-        .getElementById("personDialog")
-        .showModal();
-
-
-    setTimeout(
-        function() {
-
-            document
-                .getElementById("personName")
-                .focus();
-
-        },
-        100
-    );
-
-}
-
-
-function closePersonDialog() {
-
-    document
-        .getElementById("personDialog")
-        .close();
-
-}
-
-
-/* =========================================================
-   SAVE NEW PERSON
-========================================================= */
-
-async function addPerson(event) {
-
-    event.preventDefault();
-
-
-    const input =
-        document
-            .getElementById("personName");
-
-
-    const name =
-        input.value.trim();
-
-
-    if(!name) {
-        return;
-    }
-
-
-    const exists =
-        people.some(
-            person =>
-                person.name.toLowerCase()
-                ===
-                name.toLowerCase()
-        );
-
-
-    if(exists) {
-
-        alert(
-            "Nama tersebut sudah ada."
-        );
-
-        return;
-
-    }
-
-
-    const {
-        error
-    } =
-        await supabaseClient
-            .from("people")
-            .insert({
-                name: name
-            });
-
-
-    if(error) {
-
-        alert(
-            "Gagal menambahkan orang:\n\n"
-            +
-            error.message
-        );
-
-        return;
-
-    }
-
-
-    closePersonDialog();
-
+const sameId = (a, b) => String(a) === String(b);
+
+/* ---------- init ---------- */
+async function init(){
+  try{
+    supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+    $("addTaskButton").addEventListener("click", openAdd);
+    $("cancelTaskButton").addEventListener("click", () => $("taskDialog").close());
+    $("cancelPersonButton").addEventListener("click", () => $("personDialog").close());
+    $("cancelEditPersonButton").addEventListener("click", () => $("editPersonDialog").close());
+    $("closePeopleButton").addEventListener("click", () => $("peopleManagerDialog").close());
+    $("taskForm").addEventListener("submit", saveTask);
+    $("personForm").addEventListener("submit", addPerson);
+    $("editPersonForm").addEventListener("submit", updatePerson);
+    $("search").addEventListener("input", render);
+    $("sort").addEventListener("change", render);
 
     await loadPeople();
-
-
-    selectedPIC =
-        name;
-
-
-    renderNav();
-
-    render();
-
-    updateStatusbar();
-
-}
-
-
-/* =========================================================
-   PEOPLE MANAGER
-========================================================= */
-
-function openPeopleManager() {
-
-    renderPeopleManager();
-
-
-    document
-        .getElementById(
-            "peopleManagerDialog"
-        )
-        .showModal();
-
-}
-
-
-function closePeopleManager() {
-
-    document
-        .getElementById(
-            "peopleManagerDialog"
-        )
-        .close();
-
-}
-
-
-/* =========================================================
-   RENDER PEOPLE MANAGER
-========================================================= */
-
-function renderPeopleManager() {
-
-    const container =
-        document
-            .getElementById("peopleList");
-
-
-    if(!people.length) {
-
-        container.innerHTML = `
-
-            <div class="empty">
-                Belum ada orang.
-            </div>
-
-        `;
-
-        return;
-
-    }
-
-
-    container.innerHTML = "";
-
-
-    people.forEach(
-        function(person) {
-
-            const taskCount =
-                tasks.filter(
-                    task =>
-                        task.pic
-                        ===
-                        person.name
-                ).length;
-
-
-            const item =
-                document.createElement("div");
-
-
-            item.className =
-                "people-item";
-
-
-            item.innerHTML = `
-
-                <div>
-
-                    <div class="people-item-name">
-                        ${esc(person.name)}
-                    </div>
-
-                    <div class="muted">
-                        ${taskCount} task
-                    </div>
-
-                </div>
-
-
-                <div class="people-item-actions">
-
-                    <button
-                        class="edit-person-btn"
-                        data-person-id="${person.id}"
-                    >
-                        ✎ Edit
-                    </button>
-
-
-                    <button
-                        class="delete-person-btn"
-                        data-person-id="${person.id}"
-                    >
-                        Hapus
-                    </button>
-
-                </div>
-
-            `;
-
-
-            item
-                .querySelector(
-                    ".edit-person-btn"
-                )
-                .addEventListener(
-                    "click",
-                    function() {
-
-                        openEditPerson(
-                            person.id
-                        );
-
-                    }
-                );
-
-
-            item
-                .querySelector(
-                    ".delete-person-btn"
-                )
-                .addEventListener(
-                    "click",
-                    function() {
-
-                        deletePerson(
-                            person.id
-                        );
-
-                    }
-                );
-
-
-            container.appendChild(item);
-
-        }
-    );
-
-}
-
-
-/* =========================================================
-   OPEN EDIT PERSON
-========================================================= */
-
-function openEditPerson(id) {
-
-    const person =
-        people.find(
-            item =>
-                String(item.id)
-                ===
-                String(id)
-        );
-
-
-    if(!person) {
-        return;
-    }
-
-
-    document
-        .getElementById("editPersonId")
-        .value =
-            person.id;
-
-
-    document
-        .getElementById("editPersonOldName")
-        .value =
-            person.name;
-
-
-    document
-        .getElementById("editPersonName")
-        .value =
-            person.name;
-
-
-    document
-        .getElementById(
-            "editPersonDialog"
-        )
-        .showModal();
-
-
-    setTimeout(
-        function() {
-
-            const input =
-                document
-                    .getElementById(
-                        "editPersonName"
-                    );
-
-            input.focus();
-
-            input.select();
-
-        },
-        100
-    );
-
-}
-
-
-/* =========================================================
-   CLOSE EDIT PERSON
-========================================================= */
-
-function closeEditPersonDialog() {
-
-    document
-        .getElementById(
-            "editPersonDialog"
-        )
-        .close();
-
-}
-
-
-/* =========================================================
-   UPDATE PERSON
-========================================================= */
-
-async function updatePerson(event) {
-
-    event.preventDefault();
-
-
-    const id =
-        document
-            .getElementById(
-                "editPersonId"
-            )
-            .value;
-
-
-    const oldName =
-        document
-            .getElementById(
-                "editPersonOldName"
-            )
-            .value;
-
-
-    const newName =
-        document
-            .getElementById(
-                "editPersonName"
-            )
-            .value
-            .trim();
-
-
-    if(!newName) {
-
-        alert(
-            "Nama tidak boleh kosong."
-        );
-
-        return;
-
-    }
-
-
-    /* Kalau tidak berubah */
-
-    if(newName === oldName) {
-
-        closeEditPersonDialog();
-
-        return;
-
-    }
-
-
-    /* Cek nama sudah ada */
-
-    const duplicate =
-        people.some(
-            person =>
-                String(person.id)
-                !==
-                String(id)
-                &&
-                person.name
-                    .toLowerCase()
-                ===
-                newName.toLowerCase()
-        );
-
-
-    if(duplicate) {
-
-        alert(
-            "Nama tersebut sudah digunakan."
-        );
-
-        return;
-
-    }
-
-
-    /*
-       ======================================================
-       STEP 1
-       Update semua task dengan nama lama
-       ======================================================
-    */
-
-    const {
-        error: taskError
-    } =
-        await supabaseClient
-            .from("tasks")
-            .update({
-                pic: newName
-            })
-            .eq(
-                "pic",
-                oldName
-            );
-
-
-    if(taskError) {
-
-        alert(
-            "Gagal memperbarui PIC pada task:\n\n"
-            +
-            taskError.message
-        );
-
-        return;
-
-    }
-
-
-    /*
-       ======================================================
-       STEP 2
-       Update nama di people
-       ======================================================
-    */
-
-    const {
-        error: personError
-    } =
-        await supabaseClient
-            .from("people")
-            .update({
-                name: newName
-            })
-            .eq(
-                "id",
-                id
-            );
-
-
-    if(personError) {
-
-        /*
-           Jika update people gagal,
-           kembalikan PIC task ke nama lama.
-        */
-
-        await supabaseClient
-            .from("tasks")
-            .update({
-                pic: oldName
-            })
-            .eq(
-                "pic",
-                newName
-            );
-
-
-        alert(
-            "Gagal mengubah nama orang:\n\n"
-            +
-            personError.message
-        );
-
-        return;
-
-    }
-
-
-    /*
-       Kalau sedang membuka PIC yang diedit,
-       pindahkan selectedPIC ke nama baru.
-    */
-
-    if(
-        selectedPIC
-        ===
-        oldName
-    ) {
-
-        selectedPIC =
-            newName;
-
-    }
-
-
-    closeEditPersonDialog();
-
-
-    await loadPeople();
-
     await loadTasks();
-
-
-    renderPeopleManager();
-
-    renderNav();
-
-    render();
-
-    updateStatusbar();
-
+  }catch(err){
+    showError("Gagal menjalankan aplikasi.", err);
+  }
 }
 
-
-/* =========================================================
-   DELETE PERSON
-========================================================= */
-
-async function deletePerson(id) {
-
-    const person =
-        people.find(
-            item =>
-                String(item.id)
-                ===
-                String(id)
-        );
-
-
-    if(!person) {
-        return;
-    }
-
-
-    const taskCount =
-        tasks.filter(
-            task =>
-                task.pic
-                ===
-                person.name
-        ).length;
-
-
-    if(taskCount > 0) {
-
-        alert(
-
-            `Tidak bisa menghapus ${person.name}.\n\n`
-            +
-            `Masih ada ${taskCount} task `
-            +
-            `yang menggunakan PIC tersebut.\n\n`
-            +
-            `Selesaikan atau pindahkan task `
-            +
-            `terlebih dahulu.`
-
-        );
-
-        return;
-
-    }
-
-
-    if(
-        !confirm(
-            `Hapus orang "${person.name}"?`
-        )
-    ) {
-        return;
-    }
-
-
-    const {
-        error
-    } =
-        await supabaseClient
-            .from("people")
-            .delete()
-            .eq("id", id);
-
-
-    if(error) {
-
-        alert(
-            "Gagal menghapus orang:\n\n"
-            +
-            error.message
-        );
-
-        return;
-
-    }
-
-
-    if(
-        selectedPIC
-        ===
-        person.name
-    ) {
-
-        selectedPIC =
-            "ALL";
-
-    }
-
-
-    await loadPeople();
-
-    render();
-
-    renderPeopleManager();
-
-    updateStatusbar();
-
+/* ---------- load data ---------- */
+async function loadPeople(){
+  const { data, error } = await supabaseClient.from("people").select("*").order("name", { ascending: true });
+  if(error) return showError("Gagal membaca data orang:", error);
+  people = data || [];
+  renderNav();
+  fillPICSelect();
+}
+async function loadTasks(){
+  const { data, error } = await supabaseClient.from("tasks").select("*").order("deadline", { ascending: true, nullsFirst: false });
+  if(error) return showError("Gagal membaca task:", error);
+  tasks = data || [];
+  updateStatusbar();
+  render();
 }
 
-
-/* =========================================================
-   CLOSE TASK
-========================================================= */
-
-function closeTaskDialog() {
-
-    document
-        .getElementById("taskDialog")
-        .close();
-
+/* ---------- navbar ---------- */
+function navButton(text, cls, onClick){
+  const b = document.createElement("button");
+  b.textContent = text;
+  if(cls) b.className = cls;
+  b.addEventListener("click", onClick);
+  return b;
+}
+function selectPIC(name){ selectedPIC = name; renderNav(); render(); }
+function renderNav(){
+  const nav = $("nav");
+  nav.innerHTML = "";
+  nav.appendChild(navButton("Overall", selectedPIC === "ALL" ? "active" : "", () => selectPIC("ALL")));
+  people.forEach(p => nav.appendChild(navButton(p.name, selectedPIC === p.name ? "active" : "", () => selectPIC(p.name))));
+  nav.appendChild(navButton("+ Orang", "add-person", openPersonDialog));
+  nav.appendChild(navButton("⚙ Kelola", "manage-person", openPeopleManager));
 }
 
+/* ---------- filter & sort ---------- */
+function filteredTasks(){
+  const query = $("search").value.trim().toLowerCase();
+  const sort = $("sort").value;
 
-/* =========================================================
-   START
-========================================================= */
+  const list = tasks.filter(t => {
+    if(selectedPIC !== "ALL" && t.pic !== selectedPIC) return false;
+    if(!query) return true;
+    return [t.pic, t.task, t.note, t.status, t.deadline].join(" ").toLowerCase().includes(query);
+  });
+
+  list.sort((a, b) => {
+    if(sort === "newest") return new Date(b.created_at) - new Date(a.created_at);
+    if(sort === "oldest") return new Date(a.created_at) - new Date(b.created_at);
+    return (a.deadline || "9999-12-31").localeCompare(b.deadline || "9999-12-31");
+  });
+  return list;
+}
+
+/* ---------- render ---------- */
+function render(){
+  $("app").innerHTML = selectedPIC === "ALL" ? renderOverall() : renderPersonView(selectedPIC);
+  attachButtons();
+}
+
+function renderOverall(){
+  const list = filteredTasks();
+  return renderOverallTable("OUTSTANDING LIST", list.filter(t => t.status !== "Selesai"), false)
+       + renderOverallTable("SELESAI", list.filter(t => t.status === "Selesai"), true);
+}
+
+/* Catatan penting: teks task ditulis LANGSUNG di dalam tag (tanpa enter/spasi),
+   karena .task-text memakai white-space:pre-wrap sehingga spasi & enter ikut tampil. */
+function taskCell(t){
+  const cls = { Proses: "proses-cell", Selesai: "done-cell" }[t.status] || "belum-cell";
+  const toggleBtn = t.status === "Selesai"
+    ? `<button data-action="status" data-id="${t.id}" data-status="Proses">Buka</button>`
+    : `<button class="finish-btn" title="Tandai selesai" data-action="status" data-id="${t.id}" data-status="Selesai">✓</button>`;
+
+  return `<div class="task-cell ${cls}">`
+    + `<div class="task-text">${esc(t.task)}</div>`
+    + (t.deadline ? `<div class="task-deadline">Deadline: ${formatDate(t.deadline)}</div>` : "")
+    + (t.status === "Proses" ? `<span class="task-status-small proses">Proses</span>` : "")
+    + (t.status === "Selesai" ? `<span class="task-status-small selesai">✓ Selesai</span>` : "")
+    + `<div class="task-actions">`
+    + `<button data-action="edit" data-id="${t.id}">Edit</button>`
+    + toggleBtn
+    + `<button title="Hapus" data-action="delete" data-id="${t.id}">×</button>`
+    + `</div></div>`;
+}
+
+function renderOverallTable(title, list, isDone){
+  const titleCls = isDone ? "done" : "running";
+
+  if(!people.length){
+    return `<div class="overall-section"><div class="overall-heading"><div class="overall-heading-title ${titleCls}">${title}</div></div>`
+         + `<div class="overall-wrapper"><div class="empty">Belum ada orang.</div></div></div>`;
+  }
+
+  const grouped = {};
+  people.forEach(p => grouped[p.name] = []);
+  list.forEach(t => { if(grouped[t.pic]) grouped[t.pic].push(t); });
+
+  const maxRows = Math.max(1, ...people.map(p => grouped[p.name].length));
+
+  let html = `<div class="overall-section"><div class="overall-heading">`
+    + `<div class="overall-heading-title ${titleCls}">${title}</div>`
+    + `<div class="overall-count">${list.length} task</div></div>`
+    + `<div class="overall-wrapper"><table class="overall-table"><thead><tr>`;
+
+  people.forEach(p => {
+    html += `<th><button class="person-header-button" data-person="${esc(p.name)}">${esc(p.name)}</button></th>`;
+  });
+  html += `</tr></thead><tbody>`;
+
+  for(let row = 0; row < maxRows; row++){
+    html += "<tr>";
+    people.forEach(p => {
+      const t = grouped[p.name][row];
+      html += t ? `<td>${taskCell(t)}</td>` : `<td><div class="empty-cell"></div></td>`;
+    });
+    html += "</tr>";
+  }
+  return html + `</tbody></table></div></div>`;
+}
+
+function renderPersonView(name){
+  const list = filteredTasks().filter(t => t.pic === name);
+  const running = list.filter(t => t.status !== "Selesai");
+  const done = list.filter(t => t.status === "Selesai");
+
+  return `<div class="person-view">`
+    + `<div class="person-title">${esc(name)} <span class="muted">• ${list.length} task</span></div>`
+    + `<div class="person-section-title running">OUTSTANDING <span class="muted">(${running.length})</span></div>`
+    + renderPersonTable(running)
+    + `<div class="person-section-title done">SELESAI <span class="muted">(${done.length})</span></div>`
+    + renderPersonTable(done)
+    + `</div>`;
+}
+
+function statusBadge(status){
+  const cls = status === "Proses" ? "proses" : status === "Selesai" ? "selesai" : "belum";
+  return `<span class="badge ${cls}">${esc(status)}</span>`;
+}
+
+function renderPersonTable(list){
+  if(!list.length) return `<div class="empty">Tidak ada task.</div>`;
+
+  let html = `<table class="person-table"><thead><tr>`
+    + `<th>Task</th><th>Deadline</th><th>Status</th><th>Keterangan</th><th>Aksi</th></tr></thead><tbody>`;
+
+  list.forEach(t => {
+    const toggleBtn = t.status === "Selesai"
+      ? `<button data-action="status" data-id="${t.id}" data-status="Proses">Buka</button>`
+      : `<button data-action="status" data-id="${t.id}" data-status="Selesai">Selesai</button>`;
+
+    html += `<tr class="${t.status === "Selesai" ? "done-row" : ""}">`
+      + `<td><div class="task-name">${esc(t.task)}</div></td>`
+      + `<td>${formatDate(t.deadline)}</td>`
+      + `<td>${statusBadge(t.status)}</td>`
+      + `<td class="muted">${esc(t.note || "-")}</td>`
+      + `<td><div class="actions">`
+      + `<button data-action="edit" data-id="${t.id}">Edit</button>`
+      + toggleBtn
+      + `<button data-action="delete" data-id="${t.id}">Hapus</button>`
+      + `</div></td></tr>`;
+  });
+  return html + `</tbody></table>`;
+}
+
+function attachButtons(){
+  document.querySelectorAll(".person-header-button").forEach(b => {
+    b.addEventListener("click", () => selectPIC(b.dataset.person));
+  });
+
+  document.querySelectorAll(".task-actions button, .person-table button").forEach(b => {
+    b.addEventListener("click", async () => {
+      const { action, id, status } = b.dataset;
+      if(action === "edit") openEdit(id);
+      if(action === "delete") await deleteTask(id);
+      if(action === "status") await quickStatus(id, status);
+    });
+  });
+}
+
+/* ---------- task: tambah / edit / simpan ---------- */
+function fillPICSelect(){
+  const select = $("pic");
+  if(!select) return;
+  select.innerHTML = "";
+  people.forEach(p => {
+    const o = document.createElement("option");
+    o.value = p.name;
+    o.textContent = p.name;
+    select.appendChild(o);
+  });
+}
+
+function openAdd(){
+  if(!people.length){ alert("Tambahkan orang terlebih dahulu."); return; }
+  $("modalTitle").textContent = "Tambah Task";
+  $("taskForm").reset();
+  $("taskId").value = "";
+  fillPICSelect();
+  if(selectedPIC !== "ALL" && people.some(p => p.name === selectedPIC)) $("pic").value = selectedPIC;
+  $("taskStatus").value = "Belum";
+  $("taskDialog").showModal();
+}
+
+function openEdit(id){
+  const t = tasks.find(x => sameId(x.id, id));
+  if(!t) return;
+  $("modalTitle").textContent = "Edit Task";
+  $("taskId").value = t.id;
+  fillPICSelect();
+  $("pic").value = t.pic;
+  $("task").value = t.task;
+  $("taskStatus").value = t.status;
+  $("deadline").value = t.deadline || "";
+  $("note").value = t.note || "";
+  $("taskDialog").showModal();
+}
+
+async function saveTask(event){
+  event.preventDefault();
+  const id = $("taskId").value;
+  const payload = {
+    pic: $("pic").value,
+    task: $("task").value.trim(),
+    status: $("taskStatus").value,
+    deadline: $("deadline").value || null,
+    note: $("note").value.trim() || null
+  };
+
+  const result = id
+    ? await supabaseClient.from("tasks").update(payload).eq("id", id)
+    : await supabaseClient.from("tasks").insert(payload);
+
+  if(result.error){ alert("Gagal menyimpan task:\n\n" + result.error.message); return; }
+  $("taskDialog").close();
+  await loadTasks();
+}
+
+async function quickStatus(id, status){
+  const { error } = await supabaseClient.from("tasks").update({ status }).eq("id", id);
+  if(error){ alert("Gagal mengubah status:\n\n" + error.message); return; }
+  await loadTasks();
+}
+
+async function deleteTask(id){
+  const t = tasks.find(x => sameId(x.id, id));
+  if(!t || !confirm(`Hapus task berikut?\n\n${t.task}`)) return;
+  const { error } = await supabaseClient.from("tasks").delete().eq("id", id);
+  if(error){ alert("Gagal menghapus task:\n\n" + error.message); return; }
+  await loadTasks();
+}
+
+/* ---------- orang: tambah ---------- */
+function openPersonDialog(){
+  $("personName").value = "";
+  $("personDialog").showModal();
+  setTimeout(() => $("personName").focus(), 100);
+}
+
+async function addPerson(event){
+  event.preventDefault();
+  const name = $("personName").value.trim();
+  if(!name) return;
+
+  if(people.some(p => p.name.toLowerCase() === name.toLowerCase())){
+    alert("Nama tersebut sudah ada.");
+    return;
+  }
+
+  const { error } = await supabaseClient.from("people").insert({ name });
+  if(error){ alert("Gagal menambahkan orang:\n\n" + error.message); return; }
+
+  $("personDialog").close();
+  await loadPeople();
+  selectedPIC = name;
+  renderNav();
+  render();
+  updateStatusbar();
+}
+
+/* ---------- orang: kelola ---------- */
+function openPeopleManager(){
+  renderPeopleManager();
+  $("peopleManagerDialog").showModal();
+}
+
+function renderPeopleManager(){
+  const box = $("peopleList");
+  if(!people.length){ box.innerHTML = `<div class="empty">Belum ada orang.</div>`; return; }
+
+  box.innerHTML = "";
+  people.forEach(p => {
+    const count = tasks.filter(t => t.pic === p.name).length;
+    const item = document.createElement("div");
+    item.className = "people-item";
+    item.innerHTML = `<div><div class="people-item-name">${esc(p.name)}</div><div class="muted">${count} task</div></div>`
+      + `<div class="people-item-actions">`
+      + `<button class="edit-person-btn">✎ Edit</button>`
+      + `<button class="delete-person-btn">Hapus</button></div>`;
+    item.querySelector(".edit-person-btn").addEventListener("click", () => openEditPerson(p.id));
+    item.querySelector(".delete-person-btn").addEventListener("click", () => deletePerson(p.id));
+    box.appendChild(item);
+  });
+}
+
+function openEditPerson(id){
+  const p = people.find(x => sameId(x.id, id));
+  if(!p) return;
+  $("editPersonId").value = p.id;
+  $("editPersonOldName").value = p.name;
+  $("editPersonName").value = p.name;
+  $("editPersonDialog").showModal();
+  setTimeout(() => { $("editPersonName").focus(); $("editPersonName").select(); }, 100);
+}
+
+async function updatePerson(event){
+  event.preventDefault();
+  const id = $("editPersonId").value;
+  const oldName = $("editPersonOldName").value;
+  const newName = $("editPersonName").value.trim();
+
+  if(!newName){ alert("Nama tidak boleh kosong."); return; }
+  if(newName === oldName){ $("editPersonDialog").close(); return; }
+
+  const duplicate = people.some(p => !sameId(p.id, id) && p.name.toLowerCase() === newName.toLowerCase());
+  if(duplicate){ alert("Nama tersebut sudah digunakan."); return; }
+
+  // 1. update PIC di semua task
+  const { error: taskError } = await supabaseClient.from("tasks").update({ pic: newName }).eq("pic", oldName);
+  if(taskError){ alert("Gagal memperbarui PIC pada task:\n\n" + taskError.message); return; }
+
+  // 2. update nama di people (kalau gagal, kembalikan PIC task)
+  const { error: personError } = await supabaseClient.from("people").update({ name: newName }).eq("id", id);
+  if(personError){
+    await supabaseClient.from("tasks").update({ pic: oldName }).eq("pic", newName);
+    alert("Gagal mengubah nama orang:\n\n" + personError.message);
+    return;
+  }
+
+  if(selectedPIC === oldName) selectedPIC = newName;
+  $("editPersonDialog").close();
+  await loadPeople();
+  await loadTasks();
+  renderPeopleManager();
+  renderNav();
+  render();
+  updateStatusbar();
+}
+
+async function deletePerson(id){
+  const p = people.find(x => sameId(x.id, id));
+  if(!p) return;
+
+  const count = tasks.filter(t => t.pic === p.name).length;
+  if(count > 0){
+    alert(`Tidak bisa menghapus ${p.name}.\n\nMasih ada ${count} task yang menggunakan PIC tersebut.\n\nSelesaikan atau pindahkan task terlebih dahulu.`);
+    return;
+  }
+  if(!confirm(`Hapus orang "${p.name}"?`)) return;
+
+  const { error } = await supabaseClient.from("people").delete().eq("id", id);
+  if(error){ alert("Gagal menghapus orang:\n\n" + error.message); return; }
+
+  if(selectedPIC === p.name) selectedPIC = "ALL";
+  await loadPeople();
+  render();
+  renderPeopleManager();
+  updateStatusbar();
+}
 
 init();
-
 </script>
-
 </body>
 </html>
