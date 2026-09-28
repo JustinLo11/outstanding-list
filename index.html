@@ -83,6 +83,8 @@ input[type=search]{min-width:280px}
 .person-table tr.done-row td{background:#dcfce7}
 .person-table tr.done-row:hover td{background:#d1fae5}
 .task-name{font-weight:600;white-space:pre-wrap;text-align:left}
+.person-table .col-no{width:48px;text-align:center;color:var(--muted);font-weight:700;font-size:13px}
+.person-table th.col-no{font-size:10px}
 .muted{color:var(--muted);font-size:12px}
 .badge{display:inline-block;border-radius:999px;padding:4px 8px;font-size:11px;font-weight:700}
 .badge.belum{background:#f1f5f9;color:#475569}
@@ -386,14 +388,15 @@ function renderPersonTable(list){
   if(!list.length) return `<div class="empty">Tidak ada task.</div>`;
 
   let html = `<table class="person-table"><thead><tr>`
-    + `<th>Task</th><th>Deadline</th><th>Status</th><th>Keterangan</th><th>Aksi</th></tr></thead><tbody>`;
+    + `<th class="col-no">No</th><th>Task</th><th>Deadline</th><th>Status</th><th>Keterangan</th><th>Aksi</th></tr></thead><tbody>`;
 
-  list.forEach(t => {
+  list.forEach((t, i) => {
     const toggleBtn = t.status === "Selesai"
       ? `<button data-action="status" data-id="${t.id}" data-status="Proses">Buka</button>`
       : `<button data-action="status" data-id="${t.id}" data-status="Selesai">Selesai</button>`;
 
     html += `<tr class="${t.status === "Selesai" ? "done-row" : ""}">`
+      + `<td class="col-no">${i + 1}</td>`
       + `<td><div class="task-name">${esc(t.task)}</div></td>`
       + `<td>${formatDate(t.deadline)}</td>`
       + `<td>${statusBadge(t.status)}</td>`
