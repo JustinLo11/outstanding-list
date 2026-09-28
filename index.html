@@ -203,7 +203,7 @@ input[type="search"] {
 
 
 /* =========================================================
-   OVERALL SECTION
+   OVERALL
 ========================================================= */
 
 .overall-section {
@@ -258,11 +258,6 @@ input[type="search"] {
     table-layout: fixed;
 }
 
-
-/* =========================================================
-   HEADER TABLE
-========================================================= */
-
 .overall-table th {
     padding: 7px 9px;
     text-align: left;
@@ -272,9 +267,6 @@ input[type="search"] {
     background: #f8fafc;
     border-bottom: 1px solid #e2e8f0;
 }
-
-
-/* HEADER PIC BUTTON */
 
 .person-header-button {
     width: 100%;
@@ -293,11 +285,6 @@ input[type="search"] {
     background: #e2e8f0;
     color: var(--primary);
 }
-
-
-/* =========================================================
-   TABLE BODY
-========================================================= */
 
 .overall-table td {
     padding: 4px;
@@ -321,9 +308,7 @@ input[type="search"] {
 
 .task-cell {
     min-height: 58px;
-
     padding: 7px 8px;
-
     border-radius: 7px;
 
     background: #f8fafc;
@@ -345,43 +330,24 @@ input[type="search"] {
     box-shadow: 0 2px 7px rgba(15,23,42,.08);
 }
 
-
-/* TASK SELESAI HIJAU */
-
 .task-cell.done-cell {
     background: var(--green-soft);
 }
-
-
-/* TASK BELUM */
 
 .task-cell.belum-cell {
     background: #f8fafc;
 }
 
-
-/* TASK PROSES */
-
 .task-cell.proses-cell {
     background: var(--yellow-soft);
 }
 
-
-/* =========================================================
-   TASK TEXT
-========================================================= */
-
 .task-text {
     width: 100%;
-
     font-size: 12px;
-
     line-height: 1.35;
-
     white-space: pre-wrap;
-
     word-break: break-word;
-
     text-align: left;
 }
 
@@ -445,11 +411,6 @@ input[type="search"] {
 .task-actions button.finish-btn:hover {
     background: var(--green-soft);
 }
-
-
-/* =========================================================
-   EMPTY CELL
-========================================================= */
 
 .empty-cell {
     height: 58px;
@@ -665,6 +626,8 @@ dialog::backdrop {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 10px;
+
     border: 1px solid #e2e8f0;
     border-radius: 7px;
     padding: 9px 11px;
@@ -672,6 +635,38 @@ dialog::backdrop {
 
 .people-item-name {
     font-weight: 700;
+}
+
+.people-item-actions {
+    display: flex;
+    gap: 5px;
+}
+
+.people-item-actions button {
+    border: 0;
+    border-radius: 6px;
+    padding: 6px 9px;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.edit-person-btn {
+    background: #e0ecff;
+    color: #1d4ed8;
+}
+
+.edit-person-btn:hover {
+    background: #c7dcff;
+}
+
+.delete-person-btn {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.delete-person-btn:hover {
+    background: #fecaca;
 }
 
 
@@ -713,6 +708,7 @@ dialog::backdrop {
     .overall-table {
         min-width: 900px;
     }
+
 }
 
 </style>
@@ -969,6 +965,71 @@ dialog::backdrop {
 
 
 <!-- =====================================================
+     EDIT PERSON
+===================================================== -->
+
+<dialog id="editPersonDialog">
+
+    <div class="modal">
+
+        <h2>
+            Edit Nama
+        </h2>
+
+        <form id="editPersonForm">
+
+            <input
+                type="hidden"
+                id="editPersonId"
+            >
+
+            <input
+                type="hidden"
+                id="editPersonOldName"
+            >
+
+
+            <div class="field">
+
+                <label>Nama Baru</label>
+
+                <input
+                    id="editPersonName"
+                    type="text"
+                    required
+                    autocomplete="off"
+                >
+
+            </div>
+
+
+            <div class="modal-actions">
+
+                <button
+                    type="button"
+                    id="cancelEditPersonButton"
+                    class="btn secondary"
+                >
+                    Batal
+                </button>
+
+                <button
+                    type="submit"
+                    class="btn primary"
+                >
+                    Simpan Perubahan
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</dialog>
+
+
+<!-- =====================================================
      MANAGE PEOPLE
 ===================================================== -->
 
@@ -1044,8 +1105,6 @@ async function init() {
         await loadTasks();
 
 
-        /* EVENT BUTTON UTAMA */
-
         document
             .getElementById("addTaskButton")
             .addEventListener(
@@ -1071,6 +1130,14 @@ async function init() {
 
 
         document
+            .getElementById("cancelEditPersonButton")
+            .addEventListener(
+                "click",
+                closeEditPersonDialog
+            );
+
+
+        document
             .getElementById("closePeopleButton")
             .addEventListener(
                 "click",
@@ -1091,6 +1158,14 @@ async function init() {
             .addEventListener(
                 "submit",
                 addPerson
+            );
+
+
+        document
+            .getElementById("editPersonForm")
+            .addEventListener(
+                "submit",
+                updatePerson
             );
 
 
@@ -1286,7 +1361,6 @@ function updateStatusbar() {
 
 /* =========================================================
    NAVBAR
-   TIDAK PAKAI ONCLICK HTML
 ========================================================= */
 
 function renderNav() {
@@ -1297,8 +1371,6 @@ function renderNav() {
 
     nav.innerHTML = "";
 
-
-    /* OVERALL */
 
     const overallButton =
         document.createElement("button");
@@ -1330,8 +1402,6 @@ function renderNav() {
         overallButton
     );
 
-
-    /* PEOPLE */
 
     people.forEach(
         function(person) {
@@ -1380,8 +1450,6 @@ function renderNav() {
     );
 
 
-    /* TAMBAH ORANG */
-
     const addPersonButton =
         document.createElement("button");
 
@@ -1403,8 +1471,6 @@ function renderNav() {
         addPersonButton
     );
 
-
-    /* KELOLA */
 
     const manageButton =
         document.createElement("button");
@@ -1543,7 +1609,7 @@ function render() {
         app.innerHTML =
             renderOverall();
 
-        attachOverallHeaderButtons();
+        attachOverallButtons();
 
     } else {
 
@@ -1551,6 +1617,8 @@ function render() {
             renderPersonView(
                 selectedPIC
             );
+
+        attachPersonButtons();
 
     }
 
@@ -1632,9 +1700,7 @@ function renderOverallTable(
                 <div class="overall-wrapper">
 
                     <div class="empty">
-
                         Belum ada orang.
-
                     </div>
 
                 </div>
@@ -1819,9 +1885,7 @@ function renderOverallTable(
                             >
 
                                 <div class="task-text">
-
                                     ${esc(task.task)}
-
                                 </div>
 
 
@@ -1829,9 +1893,7 @@ function renderOverallTable(
                                     task.deadline
                                     ?
                                     `
-                                    <div
-                                        class="task-deadline"
-                                    >
+                                    <div class="task-deadline">
                                         Deadline:
                                         ${formatDate(
                                             task.deadline
@@ -1942,9 +2004,7 @@ function renderOverallTable(
 
                         <td>
 
-                            <div
-                                class="empty-cell"
-                            ></div>
+                            <div class="empty-cell"></div>
 
                         </td>
 
@@ -1980,10 +2040,10 @@ function renderOverallTable(
 
 
 /* =========================================================
-   HEADER BUTTON OVERALL
+   OVERALL BUTTONS
 ========================================================= */
 
-function attachOverallHeaderButtons() {
+function attachOverallButtons() {
 
     document
         .querySelectorAll(
@@ -1996,13 +2056,8 @@ function attachOverallHeaderButtons() {
                     "click",
                     function() {
 
-                        const name =
-                            this.dataset.person;
-
-
                         selectedPIC =
-                            name;
-
+                            this.dataset.person;
 
                         renderNav();
 
@@ -2014,8 +2069,6 @@ function attachOverallHeaderButtons() {
             }
         );
 
-
-    /* ACTION BUTTON TASK */
 
     document
         .querySelectorAll(
@@ -2109,12 +2162,10 @@ function renderPersonView(name) {
             </div>
 
 
-            <div
-                class="
-                    person-section-title
-                    running
-                "
-            >
+            <div class="
+                person-section-title
+                running
+            ">
                 OUTSTANDING
                 <span class="muted">
                     (${running.length})
@@ -2125,12 +2176,10 @@ function renderPersonView(name) {
             ${renderPersonTable(running)}
 
 
-            <div
-                class="
-                    person-section-title
-                    done
-                "
-            >
+            <div class="
+                person-section-title
+                done
+            ">
                 SELESAI
                 <span class="muted">
                     (${done.length})
@@ -2199,38 +2248,24 @@ function renderPersonTable(list) {
                     <td>
 
                         <div class="task-name">
-
                             ${esc(task.task)}
-
                         </div>
 
                     </td>
 
 
                     <td>
-
-                        ${formatDate(
-                            task.deadline
-                        )}
-
+                        ${formatDate(task.deadline)}
                     </td>
 
 
                     <td>
-
-                        ${statusBadge(
-                            task.status
-                        )}
-
+                        ${statusBadge(task.status)}
                     </td>
 
 
                     <td class="muted">
-
-                        ${esc(
-                            task.note || "-"
-                        )}
-
+                        ${esc(task.note || "-")}
                     </td>
 
 
@@ -2303,22 +2338,16 @@ function renderPersonTable(list) {
     `;
 
 
-    setTimeout(
-        attachPersonActionButtons,
-        0
-    );
-
-
     return html;
 
 }
 
 
 /* =========================================================
-   PERSON ACTION BUTTON
+   PERSON BUTTONS
 ========================================================= */
 
-function attachPersonActionButtons() {
+function attachPersonButtons() {
 
     document
         .querySelectorAll(
@@ -2510,7 +2539,7 @@ function openAdd() {
 
 
 /* =========================================================
-   EDIT
+   EDIT TASK
 ========================================================= */
 
 function openEdit(id) {
@@ -2768,7 +2797,7 @@ async function deleteTask(id) {
 
 
 /* =========================================================
-   PERSON MODAL
+   ADD PERSON
 ========================================================= */
 
 function openPersonDialog() {
@@ -2807,7 +2836,7 @@ function closePersonDialog() {
 
 
 /* =========================================================
-   ADD PERSON
+   SAVE NEW PERSON
 ========================================================= */
 
 async function addPerson(event) {
@@ -2921,7 +2950,7 @@ function closePeopleManager() {
 
 
 /* =========================================================
-   PEOPLE MANAGER LIST
+   RENDER PEOPLE MANAGER
 ========================================================= */
 
 function renderPeopleManager() {
@@ -2936,9 +2965,7 @@ function renderPeopleManager() {
         container.innerHTML = `
 
             <div class="empty">
-
                 Belum ada orang.
-
             </div>
 
         `;
@@ -2976,32 +3003,58 @@ function renderPeopleManager() {
                 <div>
 
                     <div class="people-item-name">
-
                         ${esc(person.name)}
-
                     </div>
 
                     <div class="muted">
-
                         ${taskCount} task
-
                     </div>
 
                 </div>
 
 
-                <button
-                    class="btn danger"
-                    data-person-id="${person.id}"
-                >
-                    Hapus
-                </button>
+                <div class="people-item-actions">
+
+                    <button
+                        class="edit-person-btn"
+                        data-person-id="${person.id}"
+                    >
+                        ✎ Edit
+                    </button>
+
+
+                    <button
+                        class="delete-person-btn"
+                        data-person-id="${person.id}"
+                    >
+                        Hapus
+                    </button>
+
+                </div>
 
             `;
 
 
             item
-                .querySelector("button")
+                .querySelector(
+                    ".edit-person-btn"
+                )
+                .addEventListener(
+                    "click",
+                    function() {
+
+                        openEditPerson(
+                            person.id
+                        );
+
+                    }
+                );
+
+
+            item
+                .querySelector(
+                    ".delete-person-btn"
+                )
                 .addEventListener(
                     "click",
                     function() {
@@ -3018,6 +3071,289 @@ function renderPeopleManager() {
 
         }
     );
+
+}
+
+
+/* =========================================================
+   OPEN EDIT PERSON
+========================================================= */
+
+function openEditPerson(id) {
+
+    const person =
+        people.find(
+            item =>
+                String(item.id)
+                ===
+                String(id)
+        );
+
+
+    if(!person) {
+        return;
+    }
+
+
+    document
+        .getElementById("editPersonId")
+        .value =
+            person.id;
+
+
+    document
+        .getElementById("editPersonOldName")
+        .value =
+            person.name;
+
+
+    document
+        .getElementById("editPersonName")
+        .value =
+            person.name;
+
+
+    document
+        .getElementById(
+            "editPersonDialog"
+        )
+        .showModal();
+
+
+    setTimeout(
+        function() {
+
+            const input =
+                document
+                    .getElementById(
+                        "editPersonName"
+                    );
+
+            input.focus();
+
+            input.select();
+
+        },
+        100
+    );
+
+}
+
+
+/* =========================================================
+   CLOSE EDIT PERSON
+========================================================= */
+
+function closeEditPersonDialog() {
+
+    document
+        .getElementById(
+            "editPersonDialog"
+        )
+        .close();
+
+}
+
+
+/* =========================================================
+   UPDATE PERSON
+========================================================= */
+
+async function updatePerson(event) {
+
+    event.preventDefault();
+
+
+    const id =
+        document
+            .getElementById(
+                "editPersonId"
+            )
+            .value;
+
+
+    const oldName =
+        document
+            .getElementById(
+                "editPersonOldName"
+            )
+            .value;
+
+
+    const newName =
+        document
+            .getElementById(
+                "editPersonName"
+            )
+            .value
+            .trim();
+
+
+    if(!newName) {
+
+        alert(
+            "Nama tidak boleh kosong."
+        );
+
+        return;
+
+    }
+
+
+    /* Kalau tidak berubah */
+
+    if(newName === oldName) {
+
+        closeEditPersonDialog();
+
+        return;
+
+    }
+
+
+    /* Cek nama sudah ada */
+
+    const duplicate =
+        people.some(
+            person =>
+                String(person.id)
+                !==
+                String(id)
+                &&
+                person.name
+                    .toLowerCase()
+                ===
+                newName.toLowerCase()
+        );
+
+
+    if(duplicate) {
+
+        alert(
+            "Nama tersebut sudah digunakan."
+        );
+
+        return;
+
+    }
+
+
+    /*
+       ======================================================
+       STEP 1
+       Update semua task dengan nama lama
+       ======================================================
+    */
+
+    const {
+        error: taskError
+    } =
+        await supabaseClient
+            .from("tasks")
+            .update({
+                pic: newName
+            })
+            .eq(
+                "pic",
+                oldName
+            );
+
+
+    if(taskError) {
+
+        alert(
+            "Gagal memperbarui PIC pada task:\n\n"
+            +
+            taskError.message
+        );
+
+        return;
+
+    }
+
+
+    /*
+       ======================================================
+       STEP 2
+       Update nama di people
+       ======================================================
+    */
+
+    const {
+        error: personError
+    } =
+        await supabaseClient
+            .from("people")
+            .update({
+                name: newName
+            })
+            .eq(
+                "id",
+                id
+            );
+
+
+    if(personError) {
+
+        /*
+           Jika update people gagal,
+           kembalikan PIC task ke nama lama.
+        */
+
+        await supabaseClient
+            .from("tasks")
+            .update({
+                pic: oldName
+            })
+            .eq(
+                "pic",
+                newName
+            );
+
+
+        alert(
+            "Gagal mengubah nama orang:\n\n"
+            +
+            personError.message
+        );
+
+        return;
+
+    }
+
+
+    /*
+       Kalau sedang membuka PIC yang diedit,
+       pindahkan selectedPIC ke nama baru.
+    */
+
+    if(
+        selectedPIC
+        ===
+        oldName
+    ) {
+
+        selectedPIC =
+            newName;
+
+    }
+
+
+    closeEditPersonDialog();
+
+
+    await loadPeople();
+
+    await loadTasks();
+
+
+    renderPeopleManager();
+
+    renderNav();
+
+    render();
+
+    updateStatusbar();
 
 }
 
